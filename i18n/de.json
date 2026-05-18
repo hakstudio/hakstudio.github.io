@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "about": "Über mich",
+    "projects": "Projekte",
+    "experience": "Erfahrung",
+    "contact": "Kontakt",
+    "portfolio": "Portfolio"
+  },
+  "hero": {
+    "greeting": "Hallo, mein Name ist",
+    "tagline": "Ich entwickle Apps für Mobile & Web.",
+    "description": "Ich bin Softwareentwickler in Deutschland und spezialisiert auf mobile Apps, Webanwendungen und Full-Stack-Lösungen. Derzeit arbeite ich mit Flutter, Spring Boot und lege Wert auf hervorragende Benutzererfahrungen.",
+    "cta_portfolio": "Portfolio ansehen",
+    "cta_contact": "Kontakt aufnehmen"
+  },
+  "about": {
+    "title": "Über mich",
+    "p1": "Ich habe 2015 mit dem Programmieren begonnen — mit C# in Visual Studio habe ich Webbrowser, Taschenrechner und Login-Bildschirme gebaut. Was als Neugier begann, wurde schnell zu einer Leidenschaft.",
+    "p2": "Im Laufe der Jahre habe ich mit MIT App Inventor, nativem Android (Java), Unity (C#) und schließlich Full-Stack-Entwicklung mit Flutter und Spring Boot gearbeitet. Ich habe Apps im Google Play Store und Apple App Store veröffentlicht, eine eigene Programmiersprache entwickelt und als Freelancer mit einer perfekten 5,0/5-Bewertung gearbeitet.",
+    "p3": "Hier sind einige Technologien, mit denen ich kürzlich gearbeitet habe:",
+    "stat_projects": "Projekte",
+    "stat_downloads": "Downloads",
+    "stat_rating": "Freelance-Bewertung"
+  },
+  "projects": {
+    "title": "Ausgewählte Projekte",
+    "featured": "Hervorgehobenes Projekt",
+    "ole_desc": "Café-Treueprogramm: Nutzer sammeln Tokens, nehmen an Kampagnen teil und erhalten Gratisgetränke oder Rabatte. Filialen senden Kampagnen-Benachrichtigungen. In beiden App Stores veröffentlicht.",
+    "filayo_desc": "Design-Tool für Broschüren türkischer Supermärkte in Deutschland. Flyer, Posts, Stories und Etiketten mit vorgefertigten Vorlagen erstellen. Im App Store veröffentlicht.",
+    "instatalk_desc": "KI-basierte Echtzeit-Sprachübersetzung mit über 180 Sprachen für Text und Sprache. Mehrere Monate als Entwickler im Team tätig.",
+    "view_all": "Vollständiges Portfolio ansehen"
+  },
+  "experience": {
+    "title": "Mein Werdegang"
+  },
+  "exp": {
+    "fs_title": "Full-Stack-Entwickler",
+    "fs_desc": "Entwicklung von Full-Stack-Anwendungen mit Flutter & Spring Boot. Apps im Google Play Store und Apple App Store veröffentlicht, einschließlich kommerzieller Projekte.",
+    "freelance_title": "Freelance-Entwickler — Bionluk",
+    "freelance_desc": "17 Freelance-Aufträge mit perfekter 5,0/5-Bewertung (14 Rezensionen) abgeschlossen. Individuelle Lösungen für verschiedene Branchen entwickelt.",
+    "android_title": "Android- & Spieleentwicklung",
+    "android_desc": "Umstieg auf native Android-Entwicklung mit Java. „Text to Speech"-App mit über 1.000 Downloads veröffentlicht. Erstes Spiel mit Unity und C# entwickelt.",
+    "mobile_title": "Mobile App-Entwicklung",
+    "mobile_desc": "Mobile Apps mit MIT App Inventor entwickelt — Lernspiele, Firmen-Info-Apps u.a. 2018 erste App im Google Play Store veröffentlicht.",
+    "start_title": "Erste Schritte im Programmieren",
+    "start_desc": "Mit C# in Visual Studio begonnen — Webbrowser, Taschenrechner und Login-Bildschirme gebaut. Der Beginn einer lebenslangen Leidenschaft."
+  },
+  "contact": {
+    "title": "Kontakt aufnehmen",
+    "description": "Ich bin offen für neue Möglichkeiten und interessante Projekte. Ob Frage oder einfach nur Hallo sagen — schreiben Sie mir gerne, ich melde mich so schnell wie möglich!",
+    "cta": "Hallo sagen"
+  },
+  "footer": {
+    "built": "Erstellt von"
+  },
+  "portfolio": {
+    "label": "// portfolio",
+    "heading": "Alle Projekte",
+    "subtitle": "Eine Sammlung meiner Projekte der letzten Jahre — von mobilen Apps über Webplattformen bis hin zu Spielen.",
+    "stat_years": "Jahre Coding"
+  },
+  "filter": {
+    "all": "Alle",
+    "mobile": "Mobil",
+    "web": "Web",
+    "backend": "Full-Stack",
+    "game": "Spiel"
+  },
+  "p": {
+    "ole": "Café-Treueprogramm: Nutzer sammeln Tokens, nehmen an Kampagnen teil und erhalten Gratisgetränke oder Rabatte.",
+    "filayo": "Design-Tool für Broschüren türkischer Supermärkte in Deutschland. Flyer, Posts, Stories und Etiketten erstellen.",
+    "instatalk": "KI-basierte Echtzeit-Sprachübersetzung mit über 180 Sprachen. Mehrere Monate als Entwickler im Team.",
+    "gossip": "Interaktive historische Karte: Territoriale Veränderungen europäischer Länder 1900–1914. Klickbare Länder mit Detailinfo. Zweisprachig (TR/EN).",
+    "espor": "Sportstudio-Verwaltungsapp: Eltern verfolgen Anwesenheitszeiten und verwalten Zahlungen. Full-Stack mit Flutter und Spring Boot.",
+    "archive": "Dokumentenverwaltung mit Benutzerrollen und Zugriffssteuerung. Dokumente hochladen, suchen und teilen. Full-Stack mit REST-API.",
+    "yks": "Prüfungsvorbereitungs-App für die türkische Hochschulaufnahmeprüfung. Offline-Aufgaben, Lösungsvideos und Punkterechner.",
+    "aplang": "Eigene Programmiersprache: Code in drei Sprachen (EN/TR/DE) eingeben, in numerische Werte konvertieren, in Java oder C# übersetzen.",
+    "periodic": "Periodensystem-Lernspiel: Elemente korrekt zuordnen innerhalb einer Zeitvorgabe. Noch aktiv im Google Play Store.",
+    "tts": "Text-zu-Sprache-App mit über 1.000 Downloads. Als Audio speichern und über WhatsApp teilen.",
+    "asteroid": "2D-Weltraumspiel: Raumschiff steuern, Asteroiden ausweichen und zerstören. In-Game-Shop für Verbesserungen."
+  }
+}

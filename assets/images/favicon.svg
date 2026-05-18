@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#0a192f"/>
+  <!-- HAKStudio logo mark adapted for favicon, recolored to accent teal -->
+  <path fill="#64ffda" d="M4.06,6.45L8.84,6.45L8.84,11.22L16.00,6.45L23.16,11.22L23.16,6.45L27.94,6.45L27.94,25.55L23.16,25.55L23.16,20.78L18.39,20.78L18.39,25.55L13.61,25.55L13.61,20.78L8.84,20.78L8.84,25.55L4.06,25.55L4.06,6.45z"/>
+</svg>

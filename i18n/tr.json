@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "about": "Hakkımda",
+    "projects": "Projeler",
+    "experience": "Deneyim",
+    "contact": "İletişim",
+    "portfolio": "Portföy"
+  },
+  "hero": {
+    "greeting": "Merhaba, ben",
+    "tagline": "Mobil ve web için ürünler geliştiriyorum.",
+    "description": "Almanya'da yaşayan bir yazılım geliştiricisiyim. Mobil uygulamalar, web uygulamaları ve full-stack çözümler geliştiriyorum. Şu anda Flutter, Spring Boot ve kullanıcı deneyimi üzerine çalışıyorum.",
+    "cta_portfolio": "Portföyü Gör",
+    "cta_contact": "İletişime Geç"
+  },
+  "about": {
+    "title": "Hakkımda",
+    "p1": "Programlama yolculuğuma 2015'te Visual Studio'da C# ile başladım — web tarayıcıları, hesap makineleri ve giriş ekranları yaparak. Merakla başlayan bu süreç hızla tutkuya dönüştü.",
+    "p2": "Yıllar içinde MIT App Inventor, Android (Java), Unity (C#) ve son olarak Flutter ile Spring Boot kullanarak full-stack geliştirme yaptım. Google Play Store ve Apple App Store'da uygulamalar yayınladım, kendi programlama dilimi geliştirdim ve 5.0/5 puanla freelancer olarak çalıştım.",
+    "p3": "Son zamanlarda çalıştığım teknolojiler:",
+    "stat_projects": "Proje",
+    "stat_downloads": "İndirme",
+    "stat_rating": "Freelance Puan"
+  },
+  "projects": {
+    "title": "Geliştirdiğim Projeler",
+    "featured": "Öne Çıkan Proje",
+    "ole_desc": "Kafe sadakat programı: kullanıcılar token toplar, kampanyalara katılır, ücretsiz içecek veya indirim kazanır. Şubeler müşterilerine kampanya bildirimleri gönderebilir. Her iki mağazada yayınlandı.",
+    "filayo_desc": "Almanya'daki Türk marketleri için broşür tasarım aracı. El ilanları, sosyal medya paylaşımları, hikayeler ve fiyat etiketleri hazır şablonlarla oluşturulur. App Store'da yayınlandı.",
+    "instatalk_desc": "180'den fazla dili destekleyen yapay zeka tabanlı gerçek zamanlı sesli çeviri. Birkaç ay boyunca ekipte geliştirici olarak çalıştım.",
+    "view_all": "Tüm Portföyü Gör"
+  },
+  "experience": {
+    "title": "Yolculuğum"
+  },
+  "exp": {
+    "fs_title": "Full-Stack Geliştirici",
+    "fs_desc": "Flutter ve Spring Boot ile full-stack uygulamalar geliştiriyorum. Google Play Store ve Apple App Store'da ticari projeler dahil uygulamalar yayınladım.",
+    "freelance_title": "Freelance Geliştirici — Bionluk",
+    "freelance_desc": "17 freelance sipariş, 5.0/5 yıldız (14 değerlendirme). Farklı sektörlerdeki müşteriler için özel çözümler geliştirdim.",
+    "android_title": "Android ve Oyun Geliştirme",
+    "android_desc": "Java ile Android geliştirmeye geçiş yaptım. 1.000'den fazla indirilen \"Yazı Konuştur\" uygulamasını yayınladım. Unity ve C# ile ilk oyunumu geliştirdim.",
+    "mobile_title": "Mobil Uygulama Geliştirme",
+    "mobile_desc": "MIT App Inventor ile mobil uygulamalar geliştirdim — eğitim oyunları, şirket bilgi uygulamaları ve daha fazlası. 2018'de ilk uygulamamı Google Play Store'da yayınladım.",
+    "start_title": "Programlamaya İlk Adımlar",
+    "start_desc": "Visual Studio'da C# ile programlamaya başladım — web tarayıcıları, hesap makineleri ve giriş ekranları. Ömür boyu sürecek bir tutkunun başlangıcı."
+  },
+  "contact": {
+    "title": "İletişime Geç",
+    "description": "Yeni fırsatlara ve ilginç projelere açığım. Bir sorunuz varsa veya sadece merhaba demek istiyorsanız, çekinmeden yazın — en kısa sürede dönüş yapacağım!",
+    "cta": "Merhaba De"
+  },
+  "footer": {
+    "built": "Yapımcı"
+  },
+  "portfolio": {
+    "label": "// portföy",
+    "heading": "Tüm Projeler",
+    "subtitle": "Yıllar içinde geliştirdiğim projeler — mobil uygulamalardan web platformlarına ve oyunlara.",
+    "stat_years": "Yıl Kodlama"
+  },
+  "filter": {
+    "all": "Tümü",
+    "mobile": "Mobil",
+    "web": "Web",
+    "backend": "Full-Stack",
+    "game": "Oyun"
+  },
+  "p": {
+    "ole": "Kafe sadakat programı: token toplama, kampanyalara katılma, ücretsiz içecek veya indirim kazanma.",
+    "filayo": "Almanya'daki Türk marketleri için broşür tasarım aracı. El ilanları, paylaşımlar, hikayeler ve etiketler.",
+    "instatalk": "180'den fazla dili destekleyen yapay zeka tabanlı gerçek zamanlı sesli çeviri.",
+    "gossip": "İnteraktif tarih haritası: 1900–1914 arası Avrupa ülkelerinin toprak değişimleri. Tıklanabilir ülkeler. İki dilli (TR/EN).",
+    "espor": "Spor salonu yönetim uygulaması: veliler çocuklarının devamsızlığını takip eder ve ödemeleri yönetir. Flutter + Spring Boot.",
+    "archive": "Kullanıcı rolleri ve erişim kontrolü ile belge yönetimi. Belge yükleme, arama ve paylaşma. REST API backend.",
+    "yks": "YKS sınav hazırlık uygulaması. Çevrimdışı sorular, çözüm videoları, puan hesaplayıcı ve çalışma widget'ları.",
+    "aplang": "Kendi programlama dilim: üç dilde (EN/TR/DE) kod yazma, sayısal ara değerlere dönüştürme, Java veya C#'a çevirme.",
+    "periodic": "Periyodik tablo öğrenme oyunu: süre içinde elementleri doğru yere yerleştirme. Google Play Store'da aktif.",
+    "tts": "1.000'den fazla indirilen metin okuma uygulaması. Ses olarak kaydetme ve WhatsApp ile paylaşma.",
+    "asteroid": "2D uzay oyunu: uzay gemisi sürmek, asteroidlerden kaçınmak ve yok etmek. Oyun içi mağaza."
+  }
+}

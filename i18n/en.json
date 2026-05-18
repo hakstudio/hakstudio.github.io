@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "about": "About",
+    "projects": "Projects",
+    "experience": "Experience",
+    "contact": "Contact",
+    "portfolio": "Portfolio"
+  },
+  "hero": {
+    "greeting": "Hi, my name is",
+    "tagline": "I build things for mobile & web.",
+    "description": "I'm a software developer based in Germany, specializing in building mobile apps, web applications, and full-stack solutions. Currently focused on Flutter, Spring Boot, and crafting great user experiences.",
+    "cta_portfolio": "View Portfolio",
+    "cta_contact": "Get In Touch"
+  },
+  "about": {
+    "title": "About Me",
+    "p1": "I started my programming journey in 2015, experimenting with C# in Visual Studio — building web browsers, calculators, and login screens. What began as curiosity quickly became a passion that has driven me ever since.",
+    "p2": "Over the years, I've worked with MIT App Inventor, native Android (Java), Unity (C#), and eventually transitioned to full-stack development with Flutter and Spring Boot. I've published apps on both the Google Play Store and Apple App Store, built a custom programming language, and worked as a freelancer with a perfect 5.0/5 rating.",
+    "p3": "Here are some technologies I've been working with recently:",
+    "stat_projects": "Projects",
+    "stat_downloads": "Downloads",
+    "stat_rating": "Freelance Rating"
+  },
+  "projects": {
+    "title": "Some Things I've Built",
+    "featured": "Featured Project",
+    "ole_desc": "A café loyalty program app where users collect tokens, participate in campaigns, and earn free drinks or discounts. Branches can send campaign notifications to their customers. Published on both app stores.",
+    "filayo_desc": "A design tool for creating brochures for Turkish supermarkets in Germany. Create flyers, social media posts, stories, and price labels using pre-built templates. Published on the App Store.",
+    "instatalk_desc": "AI-powered real-time voice translation supporting 180+ languages with text and speech translation. Worked as a developer in the team for several months.",
+    "view_all": "View Full Portfolio"
+  },
+  "experience": {
+    "title": "My Journey"
+  },
+  "exp": {
+    "fs_title": "Full-Stack Developer",
+    "fs_desc": "Building full-stack applications with Flutter & Spring Boot. Published apps on both Google Play Store and Apple App Store, including commercial projects for clients.",
+    "freelance_title": "Freelance Developer — Bionluk",
+    "freelance_desc": "Completed 17 freelance orders with a perfect 5.0/5 star rating (14 reviews). Built custom solutions for clients across various industries.",
+    "android_title": "Android & Game Development",
+    "android_desc": "Transitioned to native Android development with Java. Published \"Text to Speech\" app with 1,000+ downloads. Built first game with Unity and C#.",
+    "mobile_title": "Mobile App Development",
+    "mobile_desc": "Developed mobile apps with MIT App Inventor — learning games, company info apps, and more. Published first app to the Google Play Store in 2018.",
+    "start_title": "First Steps in Programming",
+    "start_desc": "Started programming with C# in Visual Studio — building web browsers, calculators, and login screens. The beginning of a lifelong passion."
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "description": "I'm currently open to new opportunities and interesting projects. Whether you have a question or just want to say hi, feel free to reach out — I'll do my best to get back to you!",
+    "cta": "Say Hello"
+  },
+  "footer": {
+    "built": "Built by"
+  },
+  "portfolio": {
+    "label": "// portfolio",
+    "heading": "All Projects",
+    "subtitle": "A collection of projects I've built over the years — from mobile apps to web platforms and games.",
+    "stat_years": "Years Coding"
+  },
+  "filter": {
+    "all": "All",
+    "mobile": "Mobile",
+    "web": "Web",
+    "backend": "Full-Stack",
+    "game": "Game"
+  },
+  "p": {
+    "ole": "Café loyalty program: users collect tokens, join campaigns, and earn free drinks or discounts. Branches send campaign notifications.",
+    "filayo": "Design tool for creating brochures for Turkish supermarkets in Germany. Create flyers, posts, stories, and labels with pre-built templates.",
+    "instatalk": "AI-powered real-time voice translation supporting 180+ languages. Worked as a developer in the team for several months.",
+    "gossip": "Interactive historical map showing territorial changes across European countries 1900–1914. Clickable countries with detail info. Bilingual (TR/EN).",
+    "espor": "Sports studio management app: parents track children's attendance and manage payments. Full-stack with Flutter frontend and Spring Boot backend.",
+    "archive": "Document management with user roles and access control. Upload, search, and share documents. Full-stack with REST API backend.",
+    "yks": "Exam preparation app for the Turkish university entrance exam. Offline exercises, solution videos, score calculator, and study widgets.",
+    "aplang": "Custom programming language: write code in three languages (EN/TR/DE), convert to numeric intermediate values, then translate to Java or C#.",
+    "periodic": "Periodic table learning game: correctly place elements within a time limit. Still active on the Google Play Store.",
+    "tts": "Text-to-speech app with 1,000+ downloads. Save as audio, share via WhatsApp and other apps.",
+    "asteroid": "2D space game: pilot a spaceship, dodge and destroy asteroids. In-game shop for upgrades. Built with Unity."
+  }
+}
