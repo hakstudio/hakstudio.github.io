@@ -498,7 +498,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     EMA.worker.onmessage = e => {
       const m = e.data;
       if(m.type === "progress"){ $("emaBar").hidden = false; $("emaFill").style.width = Math.round(m.got / m.total * 100) + "%"; if(state === "playing") $("posTxt").textContent = "Ses modeli hazırlanıyor · %" + Math.round(m.got / m.total * 100); }
-      else if(m.type === "ready"){ EMA.state = "ready"; EMA.threads = m.threads; renderEngine(); if(state === "playing") play(cur); }
+      else if(m.type === "ready"){ EMA.state = "ready"; EMA.threads = m.threads; console.log("EMA hazır, iş parçacığı: " + m.threads + ", izole: " + self.crossOriginIsolated); renderEngine(); if(state === "playing") play(cur); }
       else if(m.type === "audio"){ const p = EMA.pending.get(m.id); if(p){ EMA.pending.delete(m.id); p.resolve(m); } }
       else if(m.type === "error"){
         if(m.id != null){ const p = EMA.pending.get(m.id); if(p){ EMA.pending.delete(m.id); p.reject(new Error(m.message)); } }
@@ -550,7 +550,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     const pr = emaRaw(text, 1000 + i).then(m => {
       // Es oynatıcıda hızlanacağı için ayarlanan es gerçek süre olsun diye hızla çarpıyoruz
       const pause = (/[.!?…]["'”’»)]*$/.test(text) ? 0.25 : 0.12) + S.gap / 1000 * S.rate;
-      if(m.stats) EMA.last = m.stats;
+      if(m.stats){ EMA.last = m.stats; if(app.debug) console.log("EMA parça " + i + ": gerçek zamanın " + (1 / m.stats.rtf).toFixed(1) + " katı"); }
       return { url: URL.createObjectURL(wav(m.audio, SR, pause, Math.round(SR * tone))), stats: m.stats };
     });
     pr.catch(() => EMA.cache.delete(i));

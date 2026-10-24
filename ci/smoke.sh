@@ -17,6 +17,6 @@ adb shell input keyevent KEYCODE_HOME
 sleep 10
 adb shell dumpsys activity services $P > smoke/servis.txt
 adb logcat -d > smoke/logcat-tam.txt
-grep -E "chromium|Console|AndroidRuntime|YazKonustur|FATAL|yazkonustur" smoke/logcat-tam.txt | tail -300 > smoke/logcat.txt
+grep -E "YKWeb|chromium|AndroidRuntime|FATAL|yazkonustur" smoke/logcat-tam.txt | tail -300 > smoke/logcat.txt
 adb shell pidof $P > smoke/pid.txt || echo "uygulama kapanmış" > smoke/pid.txt
 exit 0
