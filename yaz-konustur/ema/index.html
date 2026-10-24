@@ -431,16 +431,23 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     if(EMA.cache.has(i)) return EMA.cache.get(i);
     const id = ++EMA.req, text = chunks[i].text;
     const pr = new Promise((resolve, reject) => EMA.pending.set(id, { resolve, reject })).then(m => {
-      const pause = (/[.!?…]["'”’»)]*$/.test(text) ? 0.25 : 0.12) / S.rate + S.gap / 1000;
+      // Ses oynatıcıda hızlandırıldığı için es de hızlanır; ayarlanan es gerçek süre olsun diye hızla çarpıyoruz
+      const pause = (/[.!?…]["'”’»)]*$/.test(text) ? 0.25 : 0.12) + S.gap / 1000 * S.rate;
       if(m.stats) EMA.last = m.stats;
       return { url: URL.createObjectURL(wav(m.audio, 48000, pause)), stats: m.stats };
     });
     pr.catch(() => EMA.cache.delete(i));
     EMA.cache.set(i, pr);
-    EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text, speed: S.rate, seed: 1000 + i });
+    // Model hep normal hızda konuşur; hızlandırma oynatıcıda, perde korunarak yapılır
+    EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text, speed: 1, seed: 1000 + i });
     // eski sesleri bırak
     for(const k of [...EMA.cache.keys()]) if(k < i - 2 || k > i + 4){ EMA.cache.get(k).then(u => URL.revokeObjectURL(u.url)).catch(() => {}); EMA.cache.delete(k); }
     return pr;
+  }
+  function emaRate(){
+    const a = EMA.audio;
+    a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true;
+    a.defaultPlaybackRate = S.rate; a.playbackRate = S.rate;
   }
   function emaSpeak(i, my){
     const a = EMA.audio;
@@ -449,7 +456,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     emaGet(i).then(r => {
       if(my !== token || state !== "playing") return;
       EMA.idx = i;
-      a.src = r.url; a.playbackRate = 1;
+      a.src = r.url; emaRate();
       a.onended = () => { if(my === token && state === "playing") speakAt(i + 1); };
       a.play().catch(err => { toast("Ses çalınamadı: " + err.message); setState("paused"); });
       updateProgress();
@@ -506,7 +513,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     if(isEma()){
       const a = EMA.audio;
       // Duraklatılan parçaya kaldığı yerden devam et
-      if(state === "paused" && at === EMA.idx && a.src && !a.ended && a.currentTime > 0){ token++; const my = token; setState("playing"); a.onended = () => { if(my === token && state === "playing") speakAt(at + 1); }; a.play().catch(() => {}); return; }
+      if(state === "paused" && at === EMA.idx && a.src && !a.ended && a.currentTime > 0){ token++; const my = token; setState("playing"); a.onended = () => { if(my === token && state === "playing") speakAt(at + 1); }; emaRate(); a.play().catch(() => {}); return; }
       a.pause();
       setState("playing"); speakAt(at); return;
     }
@@ -588,10 +595,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       if(state === "playing") pause();
       const id = ++EMA.req;
       new Promise((resolve, reject) => EMA.pending.set(id, { resolve, reject })).then(m => {
-        EMA.idx = -1; EMA.audio.src = URL.createObjectURL(wav(m.audio, 48000, 0)); EMA.audio.onended = null; EMA.audio.play().catch(() => {});
+        EMA.idx = -1; EMA.audio.src = URL.createObjectURL(wav(m.audio, 48000, 0)); emaRate(); EMA.audio.onended = null; EMA.audio.play().catch(() => {});
         toast("Üretim hızı: gerçek zamanın " + (1 / m.stats.rtf).toFixed(1) + " katı");
       }).catch(() => {});
-      EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text: "Merhaba, bu ses " + String(S.rate).replace(".", ",") + " kat hızda, tamamen telefonunda üretiliyor.", speed: S.rate, seed: 7 });
+      EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text: "Merhaba, bu ses " + String(S.rate).replace(".", ",") + " kat hızda, tamamen telefonunda üretiliyor.", speed: 1, seed: 7 });
       return;
     }
     if(!synth) return;
@@ -620,7 +627,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     $("rateRange").value = S.rate;
     ratesEl.querySelectorAll(".rate").forEach(b => b.classList.toggle("on", +b.dataset.r === S.rate));
     updateProgress();
-    if(!quiet){ emaReset(); restartIfPlaying(); }
+    if(!quiet){ if(isEma()) emaRate(); else restartIfPlaying(); }
   }
   $("rateRange").addEventListener("input", e => setRate(+e.target.value));
 

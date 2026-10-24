@@ -1,5 +1,5 @@
 // Uygulamayı ve modeli önbellekte tutar, internetsiz açılsın. Metin hiçbir yere gönderilmez.
-const APP = "yk-ema-app-v2";
+const APP = "yk-ema-app-v3";
 const MODEL = "yk-ema-model-v1"; // model dosyaları büyük: sadece model değişince yenilenir
 const FILES = ["./", "index.html", "ema-worker.js", "normalize.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(APP).then(c => c.addAll(FILES))); self.skipWaiting(); });
