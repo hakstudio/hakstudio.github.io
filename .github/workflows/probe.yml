@@ -1,7 +1,0 @@
-name: probe
-on: [push, workflow_dispatch]
-jobs:
-  p:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "$ANDROID_HOME"; ls $ANDROID_HOME/platforms $ANDROID_HOME/build-tools; java -version

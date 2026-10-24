@@ -1,0 +1,8 @@
+app/src/main/assets/www/model
+app/src/main/assets/www/ort
+.gradle/
+build/
+app/build/
+local.properties
+*.jks
+*.keystore

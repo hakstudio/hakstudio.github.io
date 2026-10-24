@@ -1,0 +1,49 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.hakstudio.yazkonustur"
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.hakstudio.yazkonustur"
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-deneme"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures { buildConfig true }
+    androidResources {
+        // Model ve wasm zaten sıkıştırılmış gibi davranmaz; sıkıştırma indirme boyutunu küçültür, o yüzden açık bırakıyoruz
+        ignoreAssetsPattern "!.git:!.DS_Store"
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    bundle {
+        language { enableSplit = false }
+    }
+}
+
+dependencies {
+    implementation "androidx.core:core:1.16.0"
+    implementation "androidx.webkit:webkit:1.14.0"
+    implementation "androidx.media:media:1.7.0"
+    implementation "com.android.billingclient:billing:8.0.0"
+}

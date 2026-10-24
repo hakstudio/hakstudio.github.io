@@ -1,0 +1,53 @@
+name: Android derle
+on:
+  push:
+    branches: [android-app]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Model ve onnxruntime dosyaları sitedeki EMA klasöründen alınır (aynı dosyaları iki kez tutmamak için)
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: site
+          sparse-checkout: |
+            yaz-konustur/ema/model
+            yaz-konustur/ema/ort
+
+      - name: Model dosyalarını uygulamaya kopyala
+        run: |
+          rm -rf app/src/main/assets/www/model app/src/main/assets/www/ort
+          cp -r site/yaz-konustur/ema/model app/src/main/assets/www/model
+          cp -r site/yaz-konustur/ema/ort app/src/main/assets/www/ort
+          du -sh app/src/main/assets/www
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+
+      - name: Derle
+        run: gradle --no-daemon assembleDebug bundleRelease
+
+      - name: Çıktıları taslak sürüme yükle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir out
+          cp app/build/outputs/apk/debug/app-debug.apk out/yaz-konustur-deneme.apk
+          cp app/build/outputs/bundle/release/app-release.aab out/yaz-konustur-imzasiz.aab
+          ls -la out
+          gh release delete android-build -y --cleanup-tag 2>/dev/null || true
+          gh release create android-build --draft --target "$GITHUB_SHA" --title "Android derlemesi ${GITHUB_SHA::7}" --notes "Otomatik derleme" out/*

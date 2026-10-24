@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#D9481F">
+<title>Yaz Konuştur</title>
+<style>
+/* Uygulama sürümü: yazı tipleri, model ve kütüphaneler uygulamanın içinde, internet gerekmez. */
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-style:normal;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-style:normal;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-ext-700-normal.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-style:italic;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-italic.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-style:italic;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-ext-400-italic.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-display:swap;src:url(fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-display:swap;src:url(fonts/bricolage-grotesque-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;font-display:swap;src:url(fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;font-display:swap;src:url(fonts/bricolage-grotesque-latin-ext-800-normal.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+
+/* Layout: tek ekran uygulama. Üstte başlık, ortada kaydırılan metin/okuma alanı, altta sabit kontrol paneli. */
+:root{
+  --bg:#ECEFF4; --surface:#FFFFFF; --ink:#141B26; --muted:#5A6577; --line:#D3D9E3;
+  --accent:#D9481F; --accent-ink:#FFFFFF; --hl:#FFE2D4; --hl-ink:#5C1B06; --done:#8A94A6; --gold:#B7791F;
+  --shadow:0 10px 30px -12px rgba(20,27,38,.25);
+  --f-display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --read-size:1.12rem;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E131A; --surface:#161D27; --ink:#E7EBF1; --muted:#93A0B3; --line:#263142;
+  --accent:#FF7447; --accent-ink:#1A0A03; --hl:#3B2016; --hl-ink:#FFD9C9; --done:#5F6B7E; --gold:#F2B84B;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E131A; --surface:#161D27; --ink:#E7EBF1; --muted:#93A0B3; --line:#263142;
+  --accent:#FF7447; --accent-ink:#1A0A03; --hl:#3B2016; --hl-ink:#FFD9C9; --done:#5F6B7E; --gold:#F2B84B;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{height:100%;display:flex;flex-direction:column;max-width:760px;margin:0 auto}
+.pad{padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+header{display:flex;align-items:center;gap:10px;padding-block:14px 10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.mark i{display:block;width:3px;border-radius:2px;background:var(--accent-ink);margin:0 1.5px}
+.mark span{display:flex;align-items:center;height:18px}
+h1{font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;margin:0;line-height:1;display:flex;align-items:center;gap:6px}
+.pro-tag{font-family:var(--f-body);font-size:.62rem;font-weight:700;letter-spacing:.08em;background:var(--gold);color:#fff;border-radius:6px;padding:2px 6px}
+.badge{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#2FA36B;flex:none}
+.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+.iconbtn svg{width:20px;height:20px}
+
+main{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding-block:4px 10px}
+.toolbar{display:flex;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}
+.toolbar::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.88rem;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.chip svg{width:16px;height:16px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.subbar{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);min-height:1.2em}
+.subbar .title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{font-variant-numeric:tabular-nums;flex:none}
+
+.sheet{flex:1;min-height:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;position:relative;overflow:hidden}
+textarea#text{width:100%;height:100%;border:0;resize:none;background:transparent;padding:18px;font-size:1.08rem;line-height:1.65;outline:none}
+textarea#text::placeholder{color:var(--muted)}
+#reader{height:100%;overflow-y:auto;padding:18px 18px 40px;font-size:var(--read-size);line-height:1.75;overscroll-behavior:contain}
+#reader p{margin:0 0 .9em;max-width:65ch}
+.s{border-radius:6px;padding:1px 2px;margin:0 -2px;transition:background .2s,color .2s;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.s.past{color:var(--done)}
+.s.cur{background:var(--hl);color:var(--hl-ink)}
+.example{position:absolute;right:12px;top:10px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg);padding:3px 8px;border-radius:6px}
+
+.notice{font-size:.85rem;background:var(--hl);color:var(--hl-ink);border-radius:12px;padding:10px 12px}
+
+/* Kontrol paneli */
+.dock{background:var(--surface);border-top:1px solid var(--line);padding-block:12px calc(14px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+@media (min-width:760px){.dock{border:1px solid var(--line);border-radius:20px 20px 0 0}}
+.prog{display:flex;flex-direction:column;gap:6px}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta .sleep{color:var(--accent);font-weight:700}
+.transport{display:flex;align-items:center;justify-content:center;gap:14px}
+.tbtn{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center;position:relative}
+.tbtn svg{width:22px;height:22px}
+.tbtn.on{border-color:var(--accent);color:var(--accent)}
+.play{width:72px;height:72px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 8px 20px -8px var(--accent)}
+.play svg{width:30px;height:30px}
+.play .eq{display:none;align-items:flex-end;gap:3px;height:22px}
+.play .eq i{width:4px;border-radius:2px;background:currentColor;animation:eq 1s ease-in-out infinite}
+.play .eq i:nth-child(2){animation-delay:-.3s}.play .eq i:nth-child(3){animation-delay:-.6s}.play .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:6px}50%{height:22px}}
+.speed{display:flex;align-items:center;gap:10px}
+.speed label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);flex:none}
+.rates{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.rates::-webkit-scrollbar{display:none}
+.rate{flex:none;border:1px solid var(--line);background:transparent;border-radius:10px;padding:7px 10px;font-variant-numeric:tabular-nums;font-size:.92rem;font-weight:700}
+.rate.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rateval{font-family:var(--f-display);font-weight:800;font-size:1.25rem;min-width:3.4ch;text-align:right;font-variant-numeric:tabular-nums;flex:none}
+
+/* Alt sayfalar */
+.overlay{position:fixed;inset:0;background:rgba(10,14,20,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.panel{background:var(--surface);width:100%;max-width:760px;max-height:88%;overflow-y:auto;border-radius:22px 22px 0 0;padding-block:8px calc(22px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:18px}
+.grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 0}
+.panel h2{font-family:var(--f-display);font-weight:800;font-size:1.2rem;margin:0;letter-spacing:-.01em}
+.panel h3{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:6px 0 -8px;font-weight:700}
+.field{display:flex;flex-direction:column;gap:8px}
+.field > span{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.field small,.hint{color:var(--muted);font-size:.82rem}
+select,input[type=number],input[type=url]{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.row small{color:var(--muted);display:block;font-size:.82rem}
+.switch{position:relative;width:48px;height:28px;flex:none}
+.switch input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer;z-index:1}
+.switch b{position:absolute;inset:0;border-radius:14px;background:var(--line);transition:background .2s}
+.switch b::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked + b{background:var(--accent)}
+.switch input:checked + b::after{transform:translateX(20px)}
+.switch input:focus-visible + b{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;border:0;background:transparent;padding:10px 6px;font-size:.9rem}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--ink);color:var(--bg);font-weight:700}
+.btn.accent{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn[disabled]{opacity:.5}
+.help{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+.help h4{font-size:.95rem;color:var(--ink);margin:0 0 6px}
+.help ol{margin:0;padding-left:1.2em}
+.help li{margin-bottom:4px}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg);text-align:left;width:100%}
+.item .ic{width:40px;height:40px;border-radius:12px;background:var(--surface);display:grid;place-items:center;flex:none;color:var(--accent)}
+.item .ic svg{width:20px;height:20px}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .tx small{color:var(--muted);font-size:.82rem;display:block}
+.item .lock{font-size:.65rem;font-weight:700;letter-spacing:.08em;background:var(--gold);color:#fff;border-radius:6px;padding:2px 6px;flex:none}
+.item .del{border:0;background:transparent;color:var(--muted);width:36px;height:36px;border-radius:10px;flex:none}
+.item.cur{border-color:var(--accent)}
+.mini{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:6px}
+.mini i{display:block;height:100%;background:var(--accent)}
+.perks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.perks li{display:flex;gap:10px;align-items:flex-start}
+.perks li::before{content:"✓";color:var(--accent);font-weight:700;flex:none;width:1.2em}
+.perks small{display:block;color:var(--muted);font-size:.82rem}
+.price{font-family:var(--f-display);font-weight:800;font-size:1.6rem}
+.toast{position:fixed;left:50%;bottom:calc(210px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:.88rem;z-index:40;max-width:calc(100% - 32px);text-align:center}
+.foot{font-size:.78rem;color:var(--muted);text-align:center}
+.foot a{color:inherit}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="pad">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><span><i style="height:8px"></i><i style="height:16px"></i><i style="height:11px"></i><i style="height:5px"></i></span></div>
+      <div style="min-width:0">
+        <h1>Yaz Konuştur <span class="pro-tag" id="proTag" hidden>PRO</span></h1>
+        <div class="badge">Yapay zekâ sesi · cihazda · metin dışarı gitmez</div>
+      </div>
+    </div>
+    <button class="iconbtn" id="openLib" aria-label="Kitaplık">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4v16M10 4v16M15 5l4 15"/></svg>
+    </button>
+    <button class="iconbtn" id="openSettings" aria-label="Ayarlar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+    </button>
+  </header>
+
+  <main class="pad">
+    <div class="toolbar">
+      <button class="chip on" id="modeEdit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Yaz</button>
+      <button class="chip" id="modeRead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2"/><path d="M20 5v12h-5"/></svg>Oku</button>
+      <button class="chip" id="pasteBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/></svg>Yapıştır</button>
+      <button class="chip" id="importBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>PDF / Web</button>
+      <button class="chip" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>MP3</button>
+      <button class="chip" id="clearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>Temizle</button>
+    </div>
+    <div class="subbar"><span class="title" id="docTitle"></span><span class="count" id="count"></span></div>
+    <div class="notice" id="voiceNotice" hidden></div>
+    <div class="sheet">
+      <span class="example" id="exampleTag" hidden>Örnek metin</span>
+      <textarea id="text" placeholder="Seslendirmek istediğin metni buraya yapıştır…" spellcheck="false"></textarea>
+      <div id="reader" hidden></div>
+    </div>
+  </main>
+
+  <section class="dock pad" aria-label="Oynatma">
+    <div class="prog">
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="meta"><span id="posTxt">Hazır</span><span class="sleep" id="sleepTxt" hidden></span><span id="remTxt"></span></div>
+    </div>
+    <div class="transport">
+      <button class="tbtn" id="sleepBtn" aria-label="Uyku zamanlayıcı"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
+      <button class="tbtn" id="prevBtn" aria-label="Önceki cümle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button class="play" id="playBtn" aria-label="Oynat">
+        <svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span class="eq" id="icoEq"><i></i><i></i><i></i><i></i></span>
+      </button>
+      <button class="tbtn" id="nextBtn" aria-label="Sonraki cümle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <button class="tbtn" id="stopBtn" aria-label="Durdur ve başa dön"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+    </div>
+    <div class="speed">
+      <label for="rateRange">Hız</label>
+      <div class="rates" id="rates"></div>
+      <span class="rateval" id="rateVal">1×</span>
+    </div>
+  </section>
+</div>
+
+<!-- Ayarlar -->
+<div class="overlay" id="overlay" hidden>
+  <div class="panel pad" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="grab"></div>
+    <div class="row"><h2 id="setTitle">Ayarlar</h2><button class="iconbtn" data-close aria-label="Kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+
+    <button class="item" id="proCard" style="border-color:var(--gold)">
+      <span class="ic" style="color:var(--gold)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg></span>
+      <span class="tx"><b id="proCardTitle">Yaz Konuştur Pro</b><small id="proCardSub">PDF, web sayfası, MP3 kaydı ve kitaplık. Tek seferlik.</small></span>
+    </button>
+
+    <h3>Ses</h3>
+    <div class="field"><span>Ses motoru</span>
+      <div class="seg" id="engineSeg"><button data-v="ema">EMA yapay zekâ</button><button data-v="system">Telefonun sesi</button></div>
+      <small id="emaInfo">EMA, cihazında çalışan Türkçe yapay zekâ sesidir. İnternet gerekmez.</small>
+      <div class="bar" id="emaBar" hidden><i id="emaFill"></i></div>
+    </div>
+    <label class="field" id="voiceField"><span>Ses</span><select id="voiceSel"></select></label>
+
+    <div class="field" id="toneField"><span>Ses tonu · <b id="toneVal">Normal</b></span>
+      <div class="seg" id="toneSeg"><button data-v="0.84">Çok kalın</button><button data-v="0.92">Kalın</button><button data-v="1">Normal</button><button data-v="1.08">İnce</button></div>
+      <input type="range" id="tone" min="0.78" max="1.2" step="0.02" value="1" aria-label="Ses tonu ince ayar">
+      <small>Sesi kalınlaştırır ya da inceltir, okuma hızı değişmez.</small>
+    </div>
+
+    <label class="field"><span>Hız ince ayar · <b id="rateFine">1.00×</b></span><input type="range" id="rateRange" min="0.5" max="3" step="0.05" value="1"></label>
+    <label class="field"><span>Cümle arası es · <b id="gapVal">0 ms</b></span><input type="range" id="gap" min="0" max="800" step="50" value="0"></label>
+
+    <h3>Okuma</h3>
+    <label class="field"><span>Yazı boyutu · <b id="sizeVal">100%</b></span><input type="range" id="fsize" min="0.85" max="1.8" step="0.05" value="1"></label>
+    <div class="field"><span>Parça uzunluğu</span>
+      <div class="seg" id="chunkSeg"><button data-v="short">Kısa</button><button data-v="normal">Normal</button><button data-v="long">Uzun</button></div>
+      <small>Metin cümlelere, uzun cümleler virgüllerden parçalara bölünür.</small>
+    </div>
+    <div class="row"><div>Ekranı açık tut<small>Okurken ekran kararmaz. Kapalıyken de arka planda okumaya devam eder.</small></div><label class="switch"><input type="checkbox" id="wake"><b></b></label></div>
+    <div class="field"><span>Tema</span>
+      <div class="seg" id="themeSeg"><button data-v="auto">Sistem</button><button data-v="light">Açık</button><button data-v="dark">Koyu</button></div>
+    </div>
+
+    <div class="help" id="helpBox" hidden>
+      <h4>Telefonun sesi hakkında</h4>
+      <p style="margin:0">Bu seçenek telefonda ayarlı metin okuma motorunu (Google, Samsung vb.) kullanır. Yüksek hızda kelime yutuyorsa EMA'ya geç ya da “Parça uzunluğu: Kısa” seç.</p>
+    </div>
+    <p class="foot">Ses EMA Lightning modeliyle (Apache-2.0) bu cihazda üretilir ve yapay zekâ sesidir.<br><a href="#" id="licLink">Lisanslar</a> · <a href="#" id="privLink">Gizlilik</a> · <span id="verTxt"></span></p>
+  </div>
+</div>
+
+<!-- Genel alt sayfa: içe aktarma, kitaplık, Pro, dışa aktarma -->
+<div class="overlay" id="sheet2" hidden>
+  <div class="panel pad" role="dialog" aria-modal="true">
+    <div class="grab"></div>
+    <div class="row"><h2 id="s2Title"></h2><button class="iconbtn" data-close aria-label="Kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div id="s2Body" style="display:flex;flex-direction:column;gap:14px"></div>
+  </div>
+</div>
+<input type="file" id="filePick" accept="application/pdf,text/plain,.pdf,.txt,.md" hidden>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const N = window.YKNative || null; // Android köprüsü; tarayıcıda yok
+  const RATES = [1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+  const CHUNK_MAX = {short: 90, normal: 170, long: 280};
+  const SR = 48000;
+  const FREE_DOCS = 1;
+  const SAMPLE = "Merhaba! Yaz Konuştur yapıştırdığın metni cihazında çalışan Türkçe yapay zekâ sesiyle okur. Metin hiçbir sunucuya gönderilmez, internet olmadan da çalışır.\n\nHızı 1,5 ya da 2 kata çıkardığında ses bozulmaz, sadece hızlanır. Ayarlardan sesi kalınlaştırabilir ya da inceltebilirsin.\n\nBaşka bir uygulamada bir yazıyı seçip “Paylaş” ya da “Yaz Konuştur ile oku” dersen metin doğrudan buraya gelir. Bir cümleye dokunursan okuma oradan devam eder.";
+
+  const store = {
+    get(k, d){ try{ const v = localStorage.getItem("yk_" + k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+    set(k, v){ try{ localStorage.setItem("yk_" + k, JSON.stringify(v)); }catch(e){} }
+  };
+
+  const S = Object.assign({voiceURI:"", rate:1, pitch:1, tone:1, chunk:"short", gap:0, wake:false, engine:"ema", fsize:1, theme:"auto", docId:null, title:""}, store.get("settings", {}));
+  const saveS = () => store.set("settings", S);
+
+  let chunks = [], cur = store.get("pos", 0), state = "idle"; // idle | playing | paused
+  let token = 0, textDirty = true, busy = false;
+
+  const ta = $("text"), reader = $("reader");
+  const savedText = store.get("text", null);
+  ta.value = savedText === null ? SAMPLE : savedText;
+  $("exampleTag").hidden = ta.value !== SAMPLE;
+
+  /* ---------- Android köprüsü ---------- */
+  const app = { pro: false, price: "", debug: false, version: "web", inApp: !!N };
+  function readInfo(){
+    if(!N) return;
+    try{ Object.assign(app, JSON.parse(N.info())); }catch(e){}
+  }
+  readInfo();
+  const callbacks = new Map(); let cbSeq = 0;
+  function nativeCall(fn, ...args){ // sonucu YKApp.cb ile dönen yerel çağrılar
+    return new Promise((resolve, reject) => {
+      const id = ++cbSeq; callbacks.set(id, {resolve, reject});
+      try{ N[fn](...args, id); }catch(e){ callbacks.delete(id); reject(e); }
+    });
+  }
+
+  /* ---------- Metni parçalara bölme ---------- */
+  const ABBR = /(?:\b(?:Dr|Prof|Doç|Av|Yrd|Sn|Bkz|bkz|vb|vs|örn|Örn|yy|St|Mr|Mrs|No|no|s|S|Cad|Sok|Mah|Apt|Tel|Ltd|Şti|A\.Ş|vd)\.)$/;
+  function splitSentences(p){
+    const out = []; let buf = "";
+    const parts = p.split(/([.!?…]+["'”’»)]*\s+)/);
+    for(let i = 0; i < parts.length; i += 2){
+      buf += parts[i] + (parts[i+1] || "");
+      const next = parts[i+2] || "";
+      const endsAbbr = ABBR.test(buf.trim());
+      const endsNum = /\d\.\s*$/.test(buf) && /^\d/.test(next);
+      const lowerNext = /^[a-zçğıöşü]/.test(next) && !/[!?…]/.test(parts[i+1]);
+      if(parts[i+1] && !endsAbbr && !endsNum && !lowerNext){ out.push(buf.trim()); buf = ""; }
+    }
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  function splitLong(s, max){
+    if(s.length <= max) return [s];
+    const res = [];
+    let rest = s;
+    while(rest.length > max){
+      const win = rest.slice(0, max);
+      let cut = -1;
+      for(const re of [/[;:]\s/g, /[,–—]\s/g, /\s(?:ve|ama|fakat|ancak|çünkü|veya|ya da|ki)\s/g, /\s/g]){
+        let m, last = -1;
+        re.lastIndex = 0;
+        while((m = re.exec(win))){ if(m.index > max * 0.35) last = m.index + (m[0].trim().length && /^[;:,–—]/.test(m[0]) ? 1 : 0); }
+        if(last > 0){ cut = last; break; }
+      }
+      if(cut <= 0) cut = max;
+      res.push(rest.slice(0, cut).trim());
+      rest = rest.slice(cut).trim();
+    }
+    if(rest) res.push(rest);
+    return res;
+  }
+  function split(text){
+    const max = CHUNK_MAX[S.chunk] || 120;
+    const paras = text.replace(/\r/g, "").split(/\n\s*\n|\n(?=\s*[-•*\d])/).map(p => p.replace(/\s+/g, " ").trim()).filter(Boolean);
+    const out = [];
+    paras.forEach((p, pi) => {
+      splitSentences(p).forEach(s => splitLong(s, max).forEach(c => {
+        if(/[\p{L}\p{N}]/u.test(c)) out.push({text: c, para: pi});
+      }));
+    });
+    return out;
+  }
+  function build(){
+    chunks = split(ta.value);
+    if(cur >= chunks.length) cur = 0;
+    renderReader();
+    textDirty = false;
+    updateProgress();
+  }
+  function renderReader(){
+    reader.textContent = "";
+    let p = null, lastPara = -1;
+    chunks.forEach((c, i) => {
+      if(c.para !== lastPara){ p = document.createElement("p"); reader.appendChild(p); lastPara = c.para; }
+      const sp = document.createElement("span");
+      sp.className = "s"; sp.dataset.i = i; sp.textContent = c.text;
+      p.appendChild(sp); p.appendChild(document.createTextNode(" "));
+    });
+    if(!chunks.length){ const e = document.createElement("p"); e.style.color = "var(--muted)"; e.textContent = "Okunacak metin yok. “Yaz” sekmesine geçip metin yapıştır."; reader.appendChild(e); }
+    paint();
+  }
+  let painted = -1;
+  function paint(){
+    reader.querySelectorAll(".s").forEach(el => {
+      const i = +el.dataset.i;
+      el.classList.toggle("past", i < cur);
+      el.classList.toggle("cur", i === cur && state !== "idle");
+    });
+    painted = cur;
+  }
+  function scrollToCur(){
+    const el = reader.querySelector('.s[data-i="' + cur + '"]');
+    if(!el) return;
+    const r = el.getBoundingClientRect(), box = reader.getBoundingClientRect();
+    if(r.top < box.top + 40 || r.bottom > box.bottom - 60){
+      reader.scrollTo({top: reader.scrollTop + r.top - box.top - box.height * 0.3, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+    }
+  }
+
+  /* ---------- Telefonun sesi (Android TextToSpeech ya da tarayıcı) ---------- */
+  const synth = !N && window.speechSynthesis ? window.speechSynthesis : null;
+  let voices = [], keep = [], watchdog = null;
+  function loadVoices(){
+    if(N){ try{ voices = JSON.parse(N.ttsVoices()); }catch(e){ voices = []; } fillVoices(); return; }
+    if(!synth) return;
+    voices = synth.getVoices().map(v => ({id: v.voiceURI, name: v.name, lang: v.lang, raw: v}));
+    fillVoices();
+  }
+  const isTr = v => /^tr([-_]|$)/i.test(v.lang) || /turk|türk/i.test(v.name);
+  function fillVoices(){
+    const sel = $("voiceSel");
+    const list = voices.filter(isTr);
+    sel.textContent = "";
+    const def = document.createElement("option");
+    def.value = ""; def.textContent = "Varsayılan Türkçe ses";
+    sel.appendChild(def);
+    list.forEach(v => { const o = document.createElement("option"); o.value = v.id; o.textContent = v.name; sel.appendChild(o); });
+    sel.value = list.some(v => v.id === S.voiceURI) ? S.voiceURI : "";
+  }
+  function sysSpeak(i, my){
+    const c = chunks[i];
+    let advanced = false;
+    const next = () => {
+      if(advanced || my !== token || state !== "playing") return;
+      advanced = true; clearTimeout(watchdog);
+      if(S.gap) setTimeout(() => { if(my === token && state === "playing") speakAt(i + 1); }, S.gap);
+      else speakAt(i + 1);
+    };
+    if(N){
+      sysNext = next;
+      N.ttsSpeak(c.text, S.rate, S.tone, S.voiceURI || "", my);
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(c.text);
+    const v = voices.find(v => v.id === S.voiceURI);
+    if(v){ u.voice = v.raw; u.lang = v.lang; } else u.lang = "tr-TR";
+    u.rate = S.rate; u.pitch = S.tone; u.volume = 1;
+    u.onend = next;
+    u.onerror = e => { if(e.error === "interrupted" || e.error === "canceled") return; next(); };
+    keep.push(u); if(keep.length > 6) keep.shift();
+    synth.speak(u);
+    const limit = (c.text.length / (8 * S.rate) + 4) * 1000;
+    const check = () => { if(my !== token || state !== "playing") return; if(!synth.speaking && !synth.pending) next(); else watchdog = setTimeout(check, 1500); };
+    watchdog = setTimeout(check, limit);
+  }
+  let sysNext = null;
+  function sysStop(){ clearTimeout(watchdog); if(N) try{ N.ttsStop(); }catch(e){} else if(synth) synth.cancel(); }
+
+  /* ---------- Okuma ---------- */
+  function estSec(fromIdx){
+    let ch = 0;
+    for(let i = fromIdx; i < chunks.length; i++) ch += chunks[i].text.length;
+    return ch / (14 * S.rate) + (chunks.length - fromIdx) * (S.gap / 1000 + 0.15);
+  }
+  function fmt(s){ s = Math.max(0, Math.round(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s % 60).padStart(2, "0"); }
+  function updateProgress(){
+    const n = chunks.length;
+    const done = state === "idle" && cur === 0 ? 0 : cur;
+    $("barFill").style.width = n ? (done / n * 100) + "%" : "0";
+    $("posTxt").textContent = !n ? "Metin yok" : state === "idle" && cur === 0 ? n + " parça hazır" : "Parça " + Math.min(cur + 1, n) + " / " + n;
+    $("remTxt").textContent = n ? "≈ " + fmt(estSec(cur)) + " kaldı" : "";
+    const words = (ta.value.match(/[\p{L}\p{N}]+/gu) || []).length;
+    $("count").textContent = words.toLocaleString("tr-TR") + " kelime";
+    $("docTitle").textContent = S.title || "";
+  }
+  function setState(s){
+    state = s;
+    const playing = s === "playing";
+    $("icoPlay").style.display = playing ? "none" : "block";
+    $("icoEq").style.display = playing ? "flex" : "none";
+    $("playBtn").setAttribute("aria-label", playing ? "Duraklat" : "Oynat");
+    holdWake(playing);
+    paint(); updateProgress(); notifyMedia();
+  }
+  function notifyMedia(){
+    if(!N) return;
+    try{ N.media(JSON.stringify({state, title: S.title || docTitleOf(ta.value), text: chunks[cur] ? chunks[cur].text : "", pos: cur, total: chunks.length})); }catch(e){}
+  }
+  function docTitleOf(t){ const s = t.trim().replace(/\s+/g, " "); return s.length > 48 ? s.slice(0, 46).trim() + "…" : s || "Yaz Konuştur"; }
+
+  /* ---------- EMA motoru (cihazda yapay zekâ sesi) ---------- */
+  const EMA = { worker: null, state: "off", cache: new Map(), pending: new Map(), audio: new Audio(), req: 0, gen: 0, idx: -1, err: "" };
+  EMA.audio.preload = "auto";
+  const isEma = () => S.engine === "ema";
+  function emaInit(){
+    if(EMA.worker) return;
+    EMA.state = "loading"; renderEngine();
+    try{ EMA.worker = new Worker("ema-worker.js"); }catch(e){ EMA.state = "error"; EMA.err = String(e.message || e); renderEngine(); return; }
+    EMA.worker.onmessage = e => {
+      const m = e.data;
+      if(m.type === "progress"){ $("emaBar").hidden = false; $("emaFill").style.width = Math.round(m.got / m.total * 100) + "%"; if(state === "playing") $("posTxt").textContent = "Ses modeli hazırlanıyor · %" + Math.round(m.got / m.total * 100); }
+      else if(m.type === "ready"){ EMA.state = "ready"; EMA.threads = m.threads; renderEngine(); if(state === "playing") play(cur); }
+      else if(m.type === "audio"){ const p = EMA.pending.get(m.id); if(p){ EMA.pending.delete(m.id); p.resolve(m); } }
+      else if(m.type === "error"){
+        if(m.id != null){ const p = EMA.pending.get(m.id); if(p){ EMA.pending.delete(m.id); p.reject(new Error(m.message)); } }
+        else { EMA.state = "error"; EMA.err = m.message; renderEngine(); if(state === "playing"){ setState("paused"); toast("Ses modeli yüklenemedi"); } }
+      }
+    };
+    EMA.worker.onerror = e => { EMA.state = "error"; EMA.err = e.message || "Çalışan başlatılamadı"; renderEngine(); };
+    EMA.worker.postMessage({ type: "init", base: new URL("model/", location.href).href });
+  }
+  function renderEngine(){
+    $("engineSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === S.engine));
+    const ema = isEma();
+    $("voiceField").hidden = ema; $("helpBox").hidden = ema;
+    const info = $("emaInfo");
+    if(!ema) info.textContent = "EMA, cihazında çalışan Türkçe yapay zekâ sesidir. Yüksek hızda bozulmaz.";
+    else if(EMA.state === "loading") info.textContent = "Ses modeli hazırlanıyor. Birkaç saniye sürer.";
+    else if(EMA.state === "ready"){ info.textContent = "EMA hazır. Ses tamamen bu cihazda üretiliyor."; $("emaBar").hidden = true; }
+    else if(EMA.state === "error") info.textContent = "EMA yüklenemedi: " + EMA.err;
+    else info.textContent = "EMA, cihazında çalışan Türkçe yapay zekâ sesidir. İnternet gerekmez.";
+    if(!ema) loadVoices();
+  }
+  function emaReset(){ // hız, ton ya da metin değişince üretilmiş sesler geçersiz
+    EMA.gen++; EMA.worker && EMA.worker.postMessage({ type: "gen", gen: EMA.gen });
+    EMA.cache.forEach(p => p.then(u => URL.revokeObjectURL(u.url)).catch(() => {}));
+    EMA.cache.clear(); EMA.idx = -1;
+  }
+  // Ses tonu: WAV başlığındaki örnekleme hızını değiştirip (perde ve süre birlikte değişir),
+  // oynatıcıda süreyi perdeyi koruyarak geri düzeltiyoruz. Sonuç: aynı hız, daha kalın/ince ses.
+  function wav(samples, rate, padSec, headerRate){
+    const pad = Math.round(padSec * rate), n = samples.length + pad, hr = headerRate || rate;
+    const buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, str) => { for(let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt "); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, hr, true); v.setUint32(28, hr * 2, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, n * 2, true);
+    for(let i = 0; i < samples.length; i++){ const x = Math.max(-1, Math.min(1, samples[i])); v.setInt16(44 + i * 2, x < 0 ? x * 32768 : x * 32767, true); }
+    return new Blob([buf], { type: "audio/wav" });
+  }
+  function emaRaw(text, seed){
+    const id = ++EMA.req;
+    const pr = new Promise((resolve, reject) => EMA.pending.set(id, { resolve, reject }));
+    EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text, speed: 1, seed });
+    return pr;
+  }
+  function emaGet(i){
+    if(i < 0 || i >= chunks.length) return null;
+    if(EMA.cache.has(i)) return EMA.cache.get(i);
+    const text = chunks[i].text, tone = S.tone;
+    const pr = emaRaw(text, 1000 + i).then(m => {
+      // Es oynatıcıda hızlanacağı için ayarlanan es gerçek süre olsun diye hızla çarpıyoruz
+      const pause = (/[.!?…]["'”’»)]*$/.test(text) ? 0.25 : 0.12) + S.gap / 1000 * S.rate;
+      if(m.stats) EMA.last = m.stats;
+      return { url: URL.createObjectURL(wav(m.audio, SR, pause, Math.round(SR * tone))), stats: m.stats };
+    });
+    pr.catch(() => EMA.cache.delete(i));
+    EMA.cache.set(i, pr);
+    for(const k of [...EMA.cache.keys()]) if(k < i - 2 || k > i + 4){ EMA.cache.get(k).then(u => URL.revokeObjectURL(u.url)).catch(() => {}); EMA.cache.delete(k); }
+    return pr;
+  }
+  function emaRate(){
+    const a = EMA.audio;
+    a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true;
+    const r = S.rate / S.tone;
+    a.defaultPlaybackRate = r; a.playbackRate = r;
+  }
+  function emaSpeak(i, my){
+    const a = EMA.audio;
+    if(EMA.state !== "ready"){ emaInit(); $("posTxt").textContent = "Ses modeli hazırlanıyor…"; return; }
+    if(!EMA.cache.has(i)) $("posTxt").textContent = "Ses hazırlanıyor…";
+    emaGet(i).then(r => {
+      if(my !== token || state !== "playing") return;
+      EMA.idx = i;
+      a.src = r.url; emaRate();
+      a.onended = () => { if(my === token && state === "playing") speakAt(i + 1); };
+      a.play().catch(err => { toast("Ses çalınamadı: " + err.message); setState("paused"); });
+      updateProgress();
+      emaGet(i + 1); emaGet(i + 2);
+    }).catch(err => {
+      if(err.message === "stale" || my !== token) return;
+      toast("Bu parça üretilemedi, atlanıyor"); speakAt(i + 1);
+    });
+  }
+  if(!N && "mediaSession" in navigator){
+    try{
+      navigator.mediaSession.metadata = new MediaMetadata({ title: "Yaz Konuştur", artist: "EMA · cihazda" });
+      navigator.mediaSession.setActionHandler("play", () => play());
+      navigator.mediaSession.setActionHandler("pause", () => pause());
+      navigator.mediaSession.setActionHandler("nexttrack", () => jump(1));
+      navigator.mediaSession.setActionHandler("previoustrack", () => jump(-1));
+    }catch(e){}
+  }
+  let posSaveT;
+  function savePos(){ store.set("pos", cur); clearTimeout(posSaveT); posSaveT = setTimeout(syncDoc, 1500); }
+  function speakAt(i){
+    clearTimeout(watchdog);
+    if(sleep.mode === "chunk" && i > sleep.until){ sleepFire(); return; }
+    if(i >= chunks.length){ cur = 0; savePos(); setState("idle"); reader.scrollTop = 0; toast("Okuma bitti"); if(sleep.mode === "end") sleepClear(); return; }
+    if(i < 0) i = 0;
+    cur = i; savePos();
+    const my = ++token;
+    paint(); updateProgress(); scrollToCur(); notifyMedia();
+    if(isEma()) emaSpeak(i, my); else sysSpeak(i, my);
+  }
+  function play(from){
+    if(busy) return;
+    if(!isEma() && !N && !synth){ toast("Bu tarayıcıda konuşma sentezi yok"); return; }
+    if(textDirty) build();
+    if(!chunks.length){ toast("Önce bir metin yapıştır"); return; }
+    showRead();
+    const at = from === undefined ? cur : from;
+    if(isEma()){
+      const a = EMA.audio;
+      if(state === "paused" && at === EMA.idx && a.src && !a.ended && a.currentTime > 0){ token++; const my = token; setState("playing"); a.onended = () => { if(my === token && state === "playing") speakAt(at + 1); }; emaRate(); a.play().catch(() => {}); return; }
+      a.pause();
+      setState("playing"); speakAt(at); return;
+    }
+    token++; sysStop();
+    setState("playing");
+    setTimeout(() => { if(state === "playing") speakAt(at); }, 60);
+  }
+  function pause(){
+    token++;
+    if(isEma()) EMA.audio.pause(); else sysStop();
+    setState("paused");
+  }
+  function stop(){
+    token++; sysStop();
+    EMA.audio.pause(); EMA.idx = -1;
+    cur = 0; savePos(); setState("idle"); reader.scrollTop = 0;
+  }
+  function jump(d){
+    if(textDirty) build();
+    const n = Math.max(0, Math.min(chunks.length - 1, cur + d));
+    if(state === "playing") play(n); else { cur = n; savePos(); if(state === "idle") state = "paused"; setState(state); scrollToCur(); }
+  }
+  let restartT = null;
+  function restartIfPlaying(){
+    if(state !== "playing") return;
+    clearTimeout(restartT);
+    restartT = setTimeout(() => { if(isEma()){ EMA.idx = -1; EMA.audio.pause(); } play(cur); }, 250);
+  }
+
+  /* ---------- Ekranı açık tutma ---------- */
+  let wakeLock = null;
+  async function holdWake(on){
+    on = on && S.wake;
+    if(N){ try{ N.keepScreen(!!on); }catch(e){} return; }
+    if(!on){ try{ wakeLock && wakeLock.release(); }catch(e){} wakeLock = null; return; }
+    if(wakeLock || !("wakeLock" in navigator)) return;
+    try{ wakeLock = await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release", () => { wakeLock = null; }); }catch(e){}
+  }
+  document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && state === "playing") holdWake(true); });
+
+  /* ---------- Uyku zamanlayıcı ---------- */
+  const sleep = { mode: null, at: 0, until: 0, t: null };
+  function sleepClear(){ sleep.mode = null; clearInterval(sleep.t); $("sleepTxt").hidden = true; $("sleepBtn").classList.remove("on"); }
+  function sleepFire(){ sleepClear(); if(state === "playing") pause(); toast("Uyku zamanlayıcı: okuma durdu"); }
+  function sleepSet(v){
+    sleepClear();
+    if(v === "off") return;
+    $("sleepBtn").classList.add("on"); $("sleepTxt").hidden = false;
+    if(v === "end"){ sleep.mode = "end"; $("sleepTxt").textContent = "☾ metin sonunda"; return; }
+    if(v === "para"){ if(textDirty) build(); const p = chunks[cur] ? chunks[cur].para : 0; let j = cur; while(j + 1 < chunks.length && chunks[j + 1].para === p) j++; sleep.mode = "chunk"; sleep.until = j; $("sleepTxt").textContent = "☾ paragraf sonunda"; return; }
+    sleep.mode = "time"; sleep.at = Date.now() + v * 60000;
+    const tick = () => { const left = (sleep.at - Date.now()) / 1000; if(left <= 0) sleepFire(); else $("sleepTxt").textContent = "☾ " + fmt(left); };
+    tick(); sleep.t = setInterval(tick, 1000);
+  }
+  $("sleepBtn").onclick = () => {
+    openSheet("Uyku zamanlayıcı", body => {
+      const opts = [["off","Kapalı"],[5,"5 dakika"],[15,"15 dakika"],[30,"30 dakika"],[45,"45 dakika"],[60,"1 saat"],["para","Bu paragraf bitince"],["end","Metin bitince"]];
+      const list = el("div", "list");
+      opts.forEach(([v, label]) => { const b = el("button", "item"); b.innerHTML = '<span class="tx"><b></b></span>'; b.querySelector("b").textContent = label; b.onclick = () => { sleepSet(v); closeSheets(); }; list.appendChild(b); });
+      body.appendChild(list);
+    });
+  };
+
+  /* ---------- Yardımcılar ---------- */
+  let toastT;
+  function toast(msg, ms){ const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, ms || 2400); }
+  function el(tag, cls, html){ const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; }
+  function openSheet(title, fill){ $("s2Title").textContent = title; const b = $("s2Body"); b.textContent = ""; fill(b); $("sheet2").hidden = false; }
+  function closeSheets(){ if(busy) return false; const open = !$("overlay").hidden || !$("sheet2").hidden; $("overlay").hidden = true; $("sheet2").hidden = true; return open; }
+  document.querySelectorAll("[data-close]").forEach(b => b.onclick = closeSheets);
+  ["overlay", "sheet2"].forEach(id => $(id).addEventListener("click", e => { if(e.target === $(id)) closeSheets(); }));
+  const ICON = {
+    pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>',
+    web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>',
+    txt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5h14M5 10h14M5 15h10M5 20h7"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2"/><path d="M20 5v12h-5"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    del: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>'
+  };
+  function itemBtn(icon, title, sub, locked){
+    const b = el("button", "item");
+    b.innerHTML = '<span class="ic">' + ICON[icon] + '</span><span class="tx"><b></b><small></small></span>' + (locked ? '<span class="lock">PRO</span>' : "");
+    b.querySelector("b").textContent = title; b.querySelector("small").textContent = sub;
+    return b;
+  }
+
+  /* ---------- Metni yükleme (yapıştırma, paylaşma, içe aktarma) ---------- */
+  function loadText(text, title, opts){
+    opts = opts || {};
+    if(state !== "idle") stop();
+    ta.value = text; S.title = title || ""; S.docId = null; saveS();
+    textDirty = true; cur = 0; store.set("pos", 0); emaReset();
+    store.set("text", ta.value);
+    $("exampleTag").hidden = true;
+    build();
+    if(app.pro && opts.save !== false) libAdd();
+    if(opts.read) showRead(); else showEdit();
+    updateProgress();
+    if(opts.autoplay) play(0);
+  }
+
+  function showRead(){ if(textDirty) build(); ta.hidden = true; reader.hidden = false; $("modeRead").classList.add("on"); $("modeEdit").classList.remove("on"); $("exampleTag").hidden = true; scrollToCur(); }
+  function showEdit(){ reader.hidden = true; ta.hidden = false; $("modeEdit").classList.add("on"); $("modeRead").classList.remove("on"); $("exampleTag").hidden = ta.value !== SAMPLE; }
+  $("modeRead").onclick = showRead;
+  $("modeEdit").onclick = () => { if(state === "playing") pause(); showEdit(); };
+
+  let saveT;
+  ta.addEventListener("input", () => {
+    textDirty = true; cur = 0; store.set("pos", 0); emaReset();
+    if(state !== "idle") stop();
+    $("exampleTag").hidden = true;
+    clearTimeout(saveT); saveT = setTimeout(() => { store.set("text", ta.value); syncDoc(); }, 400);
+    updateProgress();
+  });
+  $("pasteBtn").onclick = async () => {
+    let t = "";
+    if(N){ try{ t = N.clipboard(); }catch(e){} }
+    if(!t){ try{ t = await navigator.clipboard.readText(); }catch(e){} }
+    if(t && t.trim()){ loadText(t, "", {read: false}); toast("Metin yapıştırıldı"); return; }
+    showEdit(); if(ta.value === SAMPLE) ta.value = ""; ta.focus(); ta.select();
+    toast("Pano boş. Metin kutusuna basılı tutup “Yapıştır”ı seç");
+  };
+  $("clearBtn").onclick = () => { ta.value = ""; S.title = ""; S.docId = null; saveS(); ta.dispatchEvent(new Event("input")); showEdit(); ta.focus(); };
+
+  reader.addEventListener("click", e => { const s = e.target.closest(".s"); if(!s) return; play(+s.dataset.i); });
+
+  // PDF
+  let pdfjs = null;
+  async function pdfText(data, onPage){
+    if(!pdfjs){ pdfjs = await import("./vendor/pdf.min.mjs"); pdfjs.GlobalWorkerOptions.workerSrc = new URL("vendor/pdf.worker.min.mjs", location.href).href; }
+    const doc = await pdfjs.getDocument({ data, isEvalSupported: false }).promise;
+    let meta = null; try{ meta = await doc.getMetadata(); }catch(e){}
+    const pages = [];
+    for(let p = 1; p <= doc.numPages; p++){
+      const page = await doc.getPage(p);
+      const tc = await page.getTextContent();
+      let s = "", lastY = null;
+      for(const it of tc.items){
+        if(!("str" in it)) continue;
+        const y = it.transform ? it.transform[5] : null;
+        if(lastY !== null && y !== null && Math.abs(y - lastY) > (it.height || 10) * 1.9 && !s.endsWith("\n")) s += "\n";
+        s += it.str + (it.hasEOL ? "\n" : "");
+        if(y !== null) lastY = y;
+      }
+      pages.push(s);
+      onPage && onPage(p, doc.numPages);
+    }
+    return { text: tidyPdf(pages), title: (meta && meta.info && meta.info.Title) || "" };
+  }
+  function tidyPdf(pages){
+    const lines = pages.join("\n\n").replace(/\r/g, "").split("\n").map(l => l.replace(/[ \t]+/g, " ").trim());
+    let out = "";
+    for(let i = 0; i < lines.length; i++){
+      const l = lines[i];
+      if(/^\d{1,4}$/.test(l) || /^sayfa \d+/i.test(l)) continue; // sayfa numaraları
+      if(!l){ if(!out.endsWith("\n\n")) out += "\n\n"; continue; }
+      if(!out || out.endsWith("\n\n")){ out += l; continue; }
+      if(/[a-zçğıöşü]-$/i.test(out)) out = out.slice(0, -1) + l;           // satır sonu tirelemesi
+      else if(/[.!?:…]["'”’»)]*$/.test(out) && l.length < 60 && /^[A-ZÇĞİÖŞÜ0-9•\-]/.test(l) && false) out += "\n\n" + l;
+      else out += " " + l;
+    }
+    return out.replace(/\n{3,}/g, "\n\n").trim();
+  }
+  async function importPdf(buf, name){
+    busy = true;
+    openSheet("PDF açılıyor", b => b.appendChild(el("p", "hint", "Metin çıkarılıyor…")));
+    try{
+      const r = await pdfText(new Uint8Array(buf), (p, n) => { const h = $("s2Body").querySelector(".hint"); if(h) h.textContent = "Sayfa " + p + " / " + n; });
+      busy = false; closeSheets();
+      if(!r.text.trim()){ toast("Bu PDF'te seçilebilir metin yok (taranmış görüntü olabilir)", 4000); return; }
+      loadText(r.text, r.title || (name || "PDF").replace(/\.pdf$/i, ""), {read: true});
+      toast("PDF açıldı");
+    }catch(e){ busy = false; closeSheets(); toast("PDF açılamadı: " + (e.message || e), 4000); }
+  }
+  // Web sayfası
+  async function importUrl(url){
+    if(!/^https?:\/\//i.test(url)) url = "https://" + url;
+    if(!N){ toast("Web sayfası okuma uygulamada çalışır"); return; }
+    busy = true;
+    openSheet("Sayfa indiriliyor", b => b.appendChild(el("p", "hint", url)));
+    try{
+      const r = JSON.parse(await nativeCall("fetchUrl", url));
+      if(!r.ok) throw new Error(r.error || "indirilemedi");
+      const doc = new DOMParser().parseFromString(r.html, "text/html");
+      const base = doc.createElement("base"); base.href = r.url || url; doc.head && doc.head.prepend(base);
+      const art = new Readability(doc, { charThreshold: 200 }).parse();
+      if(!art || !art.content) throw new Error("okunacak metin bulunamadı");
+      const box = new DOMParser().parseFromString(art.content, "text/html");
+      const parts = [];
+      box.body.querySelectorAll("h1,h2,h3,h4,p,li,blockquote,pre").forEach(n => {
+        if(n.closest("li") && n.tagName !== "LI") return;
+        const t = n.textContent.replace(/\s+/g, " ").trim(); if(t) parts.push(t);
+      });
+      const text = (art.title ? art.title + "\n\n" : "") + (parts.length ? parts.join("\n\n") : art.textContent.trim());
+      busy = false; closeSheets();
+      loadText(text, art.title || new URL(r.url || url).hostname, {read: true});
+      toast("Sayfa açıldı");
+    }catch(e){ busy = false; closeSheets(); toast("Sayfa açılamadı: " + (e.message || e), 4000); }
+  }
+  const isUrl = s => /^\s*https?:\/\/\S+\s*$/i.test(s);
+
+  $("importBtn").onclick = () => openSheet("Metin aç", body => {
+    const list = el("div", "list");
+    const pdf = itemBtn("pdf", "PDF dosyası", "Ders notu, kitap, makale", !app.pro);
+    pdf.onclick = () => need("pdf", () => { $("filePick").accept = "application/pdf,.pdf"; $("filePick").click(); });
+    const web = itemBtn("web", "Web sayfası", "Haber, blog, makale bağlantısı", !app.pro);
+    web.onclick = () => need("web", () => openSheet("Web sayfası", b => {
+      const inp = el("input"); inp.type = "url"; inp.placeholder = "https://…"; inp.inputMode = "url";
+      const go = el("button", "btn accent", "Sayfayı aç");
+      go.onclick = () => inp.value.trim() && importUrl(inp.value.trim());
+      inp.addEventListener("keydown", e => { if(e.key === "Enter") go.click(); });
+      b.appendChild(inp); b.appendChild(go);
+      b.appendChild(el("p", "hint", "Sayfa doğrudan telefonundan indirilir, reklam ve menüler ayıklanıp sadece yazı okunur. Başka uygulamalardan “Paylaş › Yaz Konuştur” da diyebilirsin."));
+      setTimeout(() => inp.focus(), 50);
+    }));
+    const txt = itemBtn("txt", "Metin dosyası", ".txt dosyası aç", false);
+    txt.onclick = () => { $("filePick").accept = "text/plain,.txt,.md"; $("filePick").click(); };
+    list.append(pdf, web, txt);
+    body.appendChild(list);
+    body.appendChild(el("p", "hint", "İpucu: Herhangi bir uygulamada yazıyı seçip menüden “Yaz Konuştur ile oku”ya basabilirsin."));
+  });
+  $("filePick").addEventListener("change", async e => {
+    const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+    closeSheets();
+    const buf = await f.arrayBuffer();
+    if(/pdf/i.test(f.type) || /\.pdf$/i.test(f.name)) need("pdf", () => importPdf(buf, f.name));
+    else loadText(decodeText(buf), f.name.replace(/\.[^.]+$/, ""), {read: true});
+  });
+  function decodeText(buf){
+    const u8 = new Uint8Array(buf);
+    try{ return new TextDecoder("utf-8", {fatal: true}).decode(u8); }catch(e){ return new TextDecoder("windows-1254").decode(u8); }
+  }
+
+  /* ---------- Kitaplık (IndexedDB) ---------- */
+  const DB = { db: null };
+  function idb(){
+    if(DB.db) return Promise.resolve(DB.db);
+    return new Promise((res, rej) => {
+      const r = indexedDB.open("yk", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("docs", { keyPath: "id" });
+      r.onsuccess = () => { DB.db = r.result; res(DB.db); };
+      r.onerror = () => rej(r.error);
+    });
+  }
+  async function tx(mode, fn){ const db = await idb(); return new Promise((res, rej) => { const t = db.transaction("docs", mode); const st = t.objectStore("docs"); const out = fn(st); t.oncomplete = () => res(out && out.result); t.onerror = () => rej(t.error); }); }
+  const libAll = () => tx("readonly", st => st.getAll()).then(a => (a || []).sort((x, y) => y.updated - x.updated));
+  async function libAdd(){
+    if(!ta.value.trim() || ta.value === SAMPLE) return;
+    const id = "d" + Date.now().toString(36);
+    const d = { id, title: S.title || docTitleOf(ta.value), text: ta.value, pos: cur, total: chunks.length, updated: Date.now() };
+    try{ await tx("readwrite", st => st.put(d)); S.docId = id; saveS(); }catch(e){}
+  }
+  async function syncDoc(){
+    if(!S.docId) return;
+    try{ await tx("readwrite", st => st.put({ id: S.docId, title: S.title || docTitleOf(ta.value), text: ta.value, pos: cur, total: chunks.length, updated: Date.now() })); }catch(e){}
+  }
+  $("openLib").onclick = async () => {
+    const docs = app.pro ? await libAll().catch(() => []) : [];
+    openSheet("Kitaplık", body => {
+      if(!app.pro){
+        body.appendChild(el("p", "hint", "Kitaplık, kaydettiğin metinleri ve her birinde kaldığın yeri saklar. Ders notlarını, kitap bölümlerini ayrı ayrı tutup istediğin an kaldığın yerden dinlersin."));
+        const b = el("button", "btn accent", "Pro ile kitaplığı aç"); b.onclick = () => showPro("lib"); body.appendChild(b); return;
+      }
+      const list = el("div", "list");
+      if(!S.docId && ta.value.trim() && ta.value !== SAMPLE){ const a = itemBtn("plus", "Şu anki metni kaydet", docTitleOf(ta.value)); a.onclick = async () => { await libAdd(); closeSheets(); toast("Kitaplığa kaydedildi"); }; list.appendChild(a); }
+      if(!docs.length) body.appendChild(el("p", "hint", "Henüz kayıtlı metin yok. PDF, web sayfası ya da paylaştığın metinler buraya otomatik eklenir."));
+      docs.forEach(d => {
+        const pct = d.total ? Math.round(d.pos / d.total * 100) : 0;
+        const b = itemBtn("doc", d.title, pct + "% dinlendi · " + new Date(d.updated).toLocaleDateString("tr-TR"));
+        if(d.id === S.docId) b.classList.add("cur");
+        const bar = el("div", "mini", '<i style="width:' + pct + '%"></i>'); b.querySelector(".tx").appendChild(bar);
+        const del = el("span", "del", ICON.del); del.setAttribute("role", "button"); del.setAttribute("aria-label", "Sil"); del.style.display = "grid"; del.style.placeItems = "center";
+        del.onclick = async ev => { ev.stopPropagation(); if(!confirm("“" + d.title + "” silinsin mi?")) return; await tx("readwrite", st => st.delete(d.id)); if(S.docId === d.id){ S.docId = null; saveS(); } b.remove(); };
+        b.appendChild(del);
+        b.onclick = () => {
+          if(state !== "idle") stop();
+          ta.value = d.text; S.title = d.title; S.docId = d.id; saveS(); store.set("text", d.text);
+          textDirty = true; emaReset(); build(); cur = Math.min(d.pos || 0, Math.max(0, chunks.length - 1)); savePos();
+          state = cur > 0 ? "paused" : "idle"; setState(state); showRead(); closeSheets();
+        };
+        list.appendChild(b);
+      });
+      body.appendChild(list);
+    });
+  };
+
+  /* ---------- MP3 olarak kaydetme ---------- */
+  $("exportBtn").onclick = () => need("mp3", () => {
+    if(textDirty) build();
+    if(!chunks.length){ toast("Önce bir metin yapıştır"); return; }
+    if(!isEma()){ toast("MP3 kaydı EMA sesiyle yapılır, ayarlardan EMA'yı seç"); return; }
+    const all = split(ta.value), mins = Math.max(1, Math.round(estSec.call(null, 0) * S.rate / 60));
+    openSheet("MP3 olarak kaydet", body => {
+      body.appendChild(el("p", "hint", all.length + " parça, yaklaşık " + mins + " dakikalık ses. Seçtiğin ses tonuyla, normal hızda kaydedilir; dinlerken oynatıcıdan hızlandırabilirsin. Telefonda üretildiği için uzun metinlerde birkaç dakika sürebilir."));
+      const go = el("button", "btn accent", "Kaydetmeye başla");
+      go.onclick = () => startExport(all);
+      body.appendChild(go);
+    });
+  });
+  const XP = { on: false, cancel: false };
+  window.__exportReady = null;
+  async function startExport(all){
+    if(state === "playing") pause();
+    if(EMA.state !== "ready"){ emaInit(); toast("Ses modeli hazırlanıyor, birazdan tekrar dene"); return; }
+    const name = (S.title || docTitleOf(ta.value)).replace(/[\\/:*?"<>|…]+/g, "").slice(0, 60).trim() || "yaz-konustur";
+    let ok;
+    if(N) ok = await nativeCall("exportStart", name + ".mp3").then(r => r === "ok").catch(() => false);
+    else ok = true;
+    if(!ok){ toast("Kaydetme iptal edildi"); return; }
+    busy = true; XP.on = true; XP.cancel = false;
+    const body = $("s2Body"); body.textContent = "";
+    $("s2Title").textContent = "MP3 kaydediliyor";
+    const bar = el("div", "bar", "<i></i>"), info = el("p", "hint", "Başlıyor…"), cancel = el("button", "btn ghost", "İptal");
+    cancel.onclick = () => { XP.cancel = true; cancel.disabled = true; info.textContent = "İptal ediliyor…"; };
+    body.append(bar, info, cancel);
+    const enc = new lamejs.Mp3Encoder(1, SR, 64);
+    const webParts = [];
+    const tone = S.tone;
+    const write = u8 => { if(!u8.length) return; if(N) N.exportWrite(b64(u8)); else webParts.push(u8.slice()); };
+    const t0 = Date.now();
+    let failed = null;
+    try{
+      for(let i = 0; i < all.length; i++){
+        if(XP.cancel) break;
+        const m = await emaRaw(all[i].text, 1000 + i);
+        let pcm = m.audio;
+        if(tone !== 1) pcm = toneShift(pcm, tone);
+        const pause = /[.!?…]["'”’»)]*$/.test(all[i].text) ? 0.3 : 0.15;
+        const n = pcm.length + Math.round(pause * SR), s16 = new Int16Array(n);
+        for(let k = 0; k < pcm.length; k++){ const x = Math.max(-1, Math.min(1, pcm[k])); s16[k] = x < 0 ? x * 32768 : x * 32767; }
+        for(let k = 0; k < n; k += 11520) write(enc.encodeBuffer(s16.subarray(k, Math.min(n, k + 11520))));
+        const done = i + 1, el2 = (Date.now() - t0) / 1000;
+        bar.firstChild.style.width = (done / all.length * 100) + "%";
+        info.textContent = done + " / " + all.length + " parça · kalan ≈ " + fmt(el2 / done * (all.length - done));
+      }
+      write(enc.flush());
+    }catch(e){ failed = e; }
+    const cancelled = XP.cancel || !!failed;
+    if(N){ try{ N.exportEnd(!cancelled); }catch(e){} }
+    else if(!cancelled){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(webParts, {type: "audio/mpeg"})); a.download = name + ".mp3"; a.click(); }
+    busy = false; XP.on = false; closeSheets();
+    toast(failed ? "Kaydedilemedi: " + (failed.message || failed) : cancelled ? "Kayıt iptal edildi" : "MP3 kaydedildi", 3500);
+  }
+  // Ton değişimi (dışa aktarma için): perdeyi ve süreyi birlikte değiştiren basit yeniden örnekleme,
+  // ardından süreyi geri getiren örtüşmeli pencere (OLA) ile zaman uzatma.
+  function toneShift(x, p){
+    const n = Math.floor(x.length / p), r = new Float32Array(n);
+    for(let i = 0; i < n; i++){ const t = i * p, k = Math.floor(t), f = t - k; r[i] = (x[k] || 0) * (1 - f) + (x[k + 1] || 0) * f; }
+    // r: perde p ile çarpıldı, süre 1/p uzadı. Şimdi süreyi p oranında kısalt (WSOLA benzeri basit OLA).
+    const W = 1920, H = W / 2, outLen = x.length, out = new Float32Array(outLen + W), norm = new Float32Array(outLen + W);
+    const win = new Float32Array(W); for(let i = 0; i < W; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / W);
+    let prev = 0;
+    for(let o = 0; o < outLen; o += H){
+      let src = Math.round(o / p);
+      // küçük bir aralıkta önceki parçayla en iyi örtüşen yeri ara
+      let best = src, bestV = -Infinity;
+      for(let d = -240; d <= 240; d += 12){
+        const s = src + d; if(s < 0 || s + W > r.length) continue;
+        let v = 0; for(let k = 0; k < H; k += 8) v += r[s + k] * (out[o + k] || 0);
+        if(v > bestV){ bestV = v; best = s; }
+      }
+      src = o === 0 ? 0 : best; prev = src;
+      for(let k = 0; k < W; k++){ const v = r[src + k]; if(v === undefined) break; out[o + k] += v * win[k]; norm[o + k] += win[k]; }
+    }
+    const y = new Float32Array(outLen);
+    for(let i = 0; i < outLen; i++) y[i] = norm[i] > 1e-3 ? out[i] / norm[i] : 0;
+    return y;
+  }
+  function b64(u8){ let s = ""; for(let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
+
+  /* ---------- Pro ---------- */
+  const PRO_WHY = { pdf: "PDF okuma", web: "Web sayfası okuma", mp3: "MP3 olarak kaydetme", lib: "Kitaplık" };
+  function need(feature, fn){ if(app.pro) fn(); else showPro(feature); }
+  function showPro(feature){
+    openSheet("Yaz Konuştur Pro", body => {
+      if(app.pro){ body.appendChild(el("p", null, "Pro etkin. Desteğin için teşekkürler!")); return; }
+      if(feature && PRO_WHY[feature]) body.appendChild(el("p", "notice", PRO_WHY[feature] + " Pro özelliğidir."));
+      body.appendChild(el("ul", "perks",
+        "<li><div><b>PDF okuma</b><small>Ders notları, kitaplar, makaleler</small></div></li>" +
+        "<li><div><b>Web sayfası okuma</b><small>Bağlantıyı paylaş, reklamsız sadece yazıyı dinle</small></div></li>" +
+        "<li><div><b>MP3 olarak kaydet</b><small>Yolda, internetsiz, istediğin oynatıcıda dinle</small></div></li>" +
+        "<li><div><b>Kitaplık</b><small>Metinlerini sakla, her birinde kaldığın yerden devam et</small></div></li>" +
+        "<li><div><b>Abonelik yok</b><small>Bir kez öde, hep senin. Reklam hiç yok.</small></div></li>"));
+      const price = el("div", "price", app.price || ""); if(app.price) body.appendChild(price);
+      const buy = el("button", "btn accent", app.price ? "Pro'yu satın al" : "Pro'yu satın al");
+      buy.onclick = () => { if(!N){ toast("Satın alma uygulamada yapılır"); return; } try{ N.buyPro(); }catch(e){ toast("Satın alma başlatılamadı"); } };
+      const rest = el("button", "btn ghost", "Satın alımı geri yükle");
+      rest.onclick = () => { if(N) try{ N.restorePro(); toast("Kontrol ediliyor…"); }catch(e){} };
+      body.append(buy, rest);
+      body.appendChild(el("p", "hint", "Temel okuma, hız, ses tonu, paylaşarak okuma ve uyku zamanlayıcı ücretsiz kalır."));
+      if(app.debug){ const d = el("button", "btn ghost", "Deneme sürümü: Pro'yu aç/kapat"); d.onclick = () => { N.debugTogglePro(); }; body.appendChild(d); }
+    });
+  }
+  function renderPro(){
+    $("proTag").hidden = !app.pro;
+    $("proCardTitle").textContent = app.pro ? "Pro etkin" : "Yaz Konuştur Pro" + (app.price ? " · " + app.price : "");
+    $("proCardSub").textContent = app.pro ? "Tüm özellikler açık. Teşekkürler!" : "PDF, web sayfası, MP3 kaydı ve kitaplık. Tek seferlik, abonelik yok.";
+  }
+  $("proCard").onclick = () => { closeSheets(); showPro(); };
+
+  /* ---------- Yerelden gelen olaylar ---------- */
+  window.YKApp = {
+    cb(id, value, err){ const c = callbacks.get(id); if(!c) return; callbacks.delete(id); err ? c.reject(new Error(err)) : c.resolve(value); },
+    cmd(c){ if(c === "play") play(); else if(c === "pause") pause(); else if(c === "toggle") state === "playing" ? pause() : play(); else if(c === "next") jump(1); else if(c === "prev") jump(-1); else if(c === "stop") stop(); },
+    ttsDone(id){ if(id === token && sysNext){ const f = sysNext; sysNext = null; f(); } },
+    pro(info){ Object.assign(app, info); renderPro(); if(info.message) toast(info.message, 3500); if(app.pro && !$("sheet2").hidden && $("s2Title").textContent === "Yaz Konuştur Pro") closeSheets(); },
+    back(){ if(closeSheets()) return true; if(!reader.hidden && state !== "playing"){ showEdit(); return true; } return false; },
+    receive(d){
+      // Paylaş / metin seçimi / dosya ile açma
+      if(d.type === "text"){
+        const t = (d.text || "").trim(); if(!t) return;
+        if(isUrl(t)){ need("web", () => importUrl(t)); return; }
+        const m = t.match(/^(.*?)\s*(https?:\/\/\S+)\s*$/s);
+        if(m && m[1].length < 140 && app.pro){ importUrl(m[2]); return; } // "Başlık https://…" biçimindeki paylaşımlar
+        closeSheets(); loadText(t, d.subject || "", {read: true, autoplay: true});
+      } else if(d.type === "file"){
+        fetch(d.url).then(r => r.arrayBuffer()).then(buf => {
+          closeSheets();
+          if(/pdf/i.test(d.mime) || /\.pdf$/i.test(d.name || "")) need("pdf", () => importPdf(buf, d.name));
+          else loadText(decodeText(buf), (d.name || "").replace(/\.[^.]+$/, ""), {read: true});
+        }).catch(e => toast("Dosya açılamadı"));
+      }
+    },
+    resume(){ readInfo(); renderPro(); }
+  };
+
+  /* ---------- Hız, ton ve ayarlar ---------- */
+  const ratesEl = $("rates");
+  RATES.forEach(r => {
+    const b = document.createElement("button");
+    b.className = "rate"; b.dataset.r = r; b.textContent = String(r).replace(".", ",") + "×";
+    b.onclick = () => setRate(r);
+    ratesEl.appendChild(b);
+  });
+  function setRate(r, quiet){
+    S.rate = Math.round(r * 100) / 100; saveS();
+    $("rateVal").textContent = String(S.rate).replace(".", ",") + "×";
+    $("rateFine").textContent = S.rate.toFixed(2) + "×";
+    $("rateRange").value = S.rate;
+    ratesEl.querySelectorAll(".rate").forEach(b => b.classList.toggle("on", +b.dataset.r === S.rate));
+    updateProgress();
+    if(!quiet){ if(isEma()) emaRate(); else restartIfPlaying(); }
+  }
+  $("rateRange").addEventListener("input", e => setRate(+e.target.value));
+
+  const TONES = [[0.84, "Çok kalın"], [0.92, "Kalın"], [1, "Normal"], [1.08, "İnce"]];
+  function toneLabel(t){ const hit = TONES.find(([v]) => Math.abs(v - t) < 0.005); if(hit) return hit[1]; return t < 1 ? "Kalın · " + Math.round((1 - t) * 100) + "%" : "İnce · " + Math.round((t - 1) * 100) + "%"; }
+  let toneT;
+  function setTone(t, quiet){
+    S.tone = Math.round(t * 100) / 100; saveS();
+    $("tone").value = S.tone; $("toneVal").textContent = toneLabel(S.tone);
+    $("toneSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", Math.abs(+b.dataset.v - S.tone) < 0.005));
+    if(quiet) return;
+    clearTimeout(toneT);
+    toneT = setTimeout(() => { emaReset(); restartIfPlaying(); }, 200);
+  }
+  $("toneSeg").addEventListener("click", e => { const b = e.target.closest("button"); if(b) setTone(+b.dataset.v); });
+  $("tone").addEventListener("input", e => setTone(+e.target.value));
+
+  function setSize(v){ S.fsize = v; saveS(); document.documentElement.style.setProperty("--read-size", (1.12 * v).toFixed(3) + "rem"); $("sizeVal").textContent = Math.round(v * 100) + "%"; $("fsize").value = v; }
+  $("fsize").addEventListener("input", e => setSize(+e.target.value));
+  function setTheme(v){
+    S.theme = v; saveS();
+    if(v === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.dataset.theme = v;
+    $("themeSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+    if(N){ const dark = v === "dark" || (v === "auto" && matchMedia("(prefers-color-scheme: dark)").matches); try{ N.setBars(getComputedStyle(document.body).backgroundColor, dark); }catch(e){} }
+  }
+  $("themeSeg").addEventListener("click", e => { const b = e.target.closest("button"); if(b) setTheme(b.dataset.v); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTheme(S.theme));
+
+  $("openSettings").onclick = () => { $("overlay").hidden = false; if(!isEma()) loadVoices(); };
+  document.addEventListener("keydown", e => {
+    if(e.key === "Escape") closeSheets();
+    if(e.key === " " && document.activeElement !== ta && !/SELECT|INPUT|BUTTON/.test(document.activeElement.tagName)){ e.preventDefault(); $("playBtn").click(); }
+  });
+  $("voiceSel").onchange = e => { S.voiceURI = e.target.value; saveS(); restartIfPlaying(); };
+  $("gap").value = S.gap; $("gapVal").textContent = S.gap + " ms";
+  $("gap").addEventListener("input", e => { S.gap = +e.target.value; $("gapVal").textContent = S.gap + " ms"; saveS(); emaReset(); updateProgress(); });
+  $("wake").checked = S.wake;
+  $("wake").onchange = e => { S.wake = e.target.checked; saveS(); holdWake(state === "playing"); };
+  function paintSeg(){ $("chunkSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === S.chunk)); }
+  $("chunkSeg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    S.chunk = b.dataset.v; saveS(); paintSeg();
+    const wasPlaying = state === "playing";
+    const ratio = chunks.length ? cur / chunks.length : 0;
+    emaReset(); build(); cur = Math.floor(ratio * chunks.length);
+    if(wasPlaying) play(cur); else { paint(); updateProgress(); }
+  });
+  $("engineSeg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    if(state === "playing") pause();
+    S.engine = b.dataset.v; saveS(); EMA.idx = -1;
+    if(isEma()) emaInit();
+    renderEngine();
+  });
+  $("licLink").onclick = e => { e.preventDefault(); openSheet("Lisanslar", b => {
+    b.appendChild(el("div", "hint",
+      "<p><b>EMA Lightning</b> ses modeli · Canberk Aslan · Apache-2.0. Ses gerçek bir kişiye ait değildir, yapay olarak tasarlanmıştır. Ürettiği kayıtları paylaşırken yapay zekâ sesi olduğunu belirt.</p>" +
+      "<p><b>ONNX Runtime Web</b> · Microsoft · MIT</p><p><b>PDF.js</b> · Mozilla · Apache-2.0</p><p><b>Readability.js</b> · Mozilla · Apache-2.0</p>" +
+      "<p><b>lamejs</b> · LGPL-2.0 (MP3 kodlayıcı, ayrı dosya olarak)</p><p><b>Atkinson Hyperlegible</b> · Braille Institute · OFL-1.1</p><p><b>Bricolage Grotesque</b> · OFL-1.1</p>"));
+  }); };
+  $("privLink").onclick = e => { e.preventDefault(); openSheet("Gizlilik", b => {
+    b.appendChild(el("div", "hint", "<p>Yaz Konuştur hiçbir kişisel veri toplamaz. Metinlerin ve sesler yalnızca bu cihazda işlenir ve saklanır, hiçbir sunucuya gönderilmez. Hesap, reklam, analiz ya da takip yoktur.</p><p>İnternet yalnızca senin açtığın web sayfasını indirmek ve Google Play üzerinden satın alma için kullanılır.</p>"));
+    if(N){ const a = el("button", "btn ghost", "Tam gizlilik politikası"); a.onclick = () => N.openUrl("https://hakstudio.github.io/yaz-konustur/gizlilik.html"); b.appendChild(a); }
+  }); };
+  $("verTxt").textContent = "Sürüm " + app.version;
+
+  /* ---------- Başlangıç ---------- */
+  paintSeg();
+  setRate(S.rate, true);
+  setTone(S.tone || 1, true);
+  setSize(S.fsize || 1);
+  setTheme(S.theme || "auto");
+  renderPro();
+  if(synth && "onvoiceschanged" in synth) synth.addEventListener("voiceschanged", loadVoices);
+  build();
+  renderEngine();
+  if(isEma()) emaInit();
+  if(cur > 0) state = "paused";
+  setState(state);
+  if(cur > 0 || ta.value !== SAMPLE) showRead();
+  window.addEventListener("pagehide", () => { synth && synth.cancel(); });
+  if(N) try{ N.ready(); }catch(e){}
+})();
+</script>
+<script src="vendor/lame.js" defer></script>
+<script src="vendor/Readability.js" defer></script>
+</body>
+</html>
