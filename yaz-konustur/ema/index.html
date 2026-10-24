@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#D9481F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Yaz Konuştur EMA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: tek ekran uygulama. Üstte başlık, ortada kaydırılan metin/okuma alanı, altta sabit kontrol paneli. */
+:root{
+  --bg:#ECEFF4; --surface:#FFFFFF; --ink:#141B26; --muted:#5A6577; --line:#D3D9E3;
+  --accent:#D9481F; --accent-ink:#FFFFFF; --hl:#FFE2D4; --hl-ink:#5C1B06; --done:#8A94A6;
+  --shadow:0 10px 30px -12px rgba(20,27,38,.25);
+  --f-display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E131A; --surface:#161D27; --ink:#E7EBF1; --muted:#93A0B3; --line:#263142;
+  --accent:#FF7447; --accent-ink:#1A0A03; --hl:#3B2016; --hl-ink:#FFD9C9; --done:#5F6B7E;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E131A; --surface:#161D27; --ink:#E7EBF1; --muted:#93A0B3; --line:#263142;
+  --accent:#FF7447; --accent-ink:#1A0A03; --hl:#3B2016; --hl-ink:#FFD9C9; --done:#5F6B7E;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{height:100%;display:flex;flex-direction:column;max-width:760px;margin:0 auto}
+.pad{padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+header{display:flex;align-items:center;gap:12px;padding-block:14px 10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.mark i{display:block;width:3px;border-radius:2px;background:var(--accent-ink);margin:0 1.5px}
+.mark span{display:flex;align-items:center;height:18px}
+h1{font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;margin:0;line-height:1}
+.badge{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:5px}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#2FA36B}
+.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+.iconbtn svg{width:20px;height:20px}
+
+main{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding-block:4px 10px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.88rem;display:inline-flex;align-items:center;gap:6px}
+.chip svg{width:16px;height:16px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.count{margin-left:auto;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.sheet{flex:1;min-height:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;position:relative;overflow:hidden}
+textarea#text{width:100%;height:100%;border:0;resize:none;background:transparent;padding:18px;font-size:1.08rem;line-height:1.65;outline:none}
+textarea#text::placeholder{color:var(--muted)}
+#reader{height:100%;overflow-y:auto;padding:18px 18px 40px;font-size:1.12rem;line-height:1.75;overscroll-behavior:contain}
+#reader p{margin:0 0 .9em;max-width:65ch}
+.s{border-radius:6px;padding:1px 2px;margin:0 -2px;transition:background .2s,color .2s;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.s.past{color:var(--done)}
+.s.cur{background:var(--hl);color:var(--hl-ink)}
+.example{position:absolute;right:12px;top:10px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg);padding:3px 8px;border-radius:6px}
+
+.notice{font-size:.85rem;background:var(--hl);color:var(--hl-ink);border-radius:12px;padding:10px 12px}
+
+/* Kontrol paneli */
+.dock{background:var(--surface);border-top:1px solid var(--line);padding-block:12px calc(14px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+@media (min-width:760px){.dock{border:1px solid var(--line);border-radius:20px 20px 0 0}}
+.prog{display:flex;flex-direction:column;gap:6px}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.transport{display:flex;align-items:center;justify-content:center;gap:14px}
+.tbtn{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center}
+.tbtn svg{width:22px;height:22px}
+.play{width:72px;height:72px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 8px 20px -8px var(--accent)}
+.play svg{width:30px;height:30px}
+.play .eq{display:none;align-items:flex-end;gap:3px;height:22px}
+.play .eq i{width:4px;border-radius:2px;background:currentColor;animation:eq 1s ease-in-out infinite}
+.play .eq i:nth-child(2){animation-delay:-.3s}.play .eq i:nth-child(3){animation-delay:-.6s}.play .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:6px}50%{height:22px}}
+.speed{display:flex;align-items:center;gap:10px}
+.speed label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);flex:none}
+.rates{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.rates::-webkit-scrollbar{display:none}
+.rate{flex:none;border:1px solid var(--line);background:transparent;border-radius:10px;padding:7px 10px;font-variant-numeric:tabular-nums;font-size:.92rem;font-weight:700}
+.rate.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rateval{font-family:var(--f-display);font-weight:800;font-size:1.25rem;min-width:3.4ch;text-align:right;font-variant-numeric:tabular-nums;flex:none}
+
+/* Ayarlar */
+.overlay{position:fixed;inset:0;background:rgba(10,14,20,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.panel{background:var(--surface);width:100%;max-width:760px;max-height:88%;overflow-y:auto;border-radius:22px 22px 0 0;padding-block:8px calc(22px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:18px}
+.grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 0}
+.panel h2{font-family:var(--f-display);font-weight:800;font-size:1.2rem;margin:0;letter-spacing:-.01em}
+.field{display:flex;flex-direction:column;gap:8px}
+.field > span{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+select,input[type=number]{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.row small{color:var(--muted);display:block;font-size:.82rem}
+.switch{position:relative;width:48px;height:28px;flex:none}
+.switch input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer;z-index:1}
+.switch b{position:absolute;inset:0;border-radius:14px;background:var(--line);transition:background .2s}
+.switch b::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked + b{background:var(--accent)}
+.switch input:checked + b::after{transform:translateX(20px)}
+.switch input:focus-visible + b{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;border:0;background:transparent;padding:10px 6px;font-size:.9rem}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--ink);color:var(--bg);font-weight:700}
+.help{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+.help h3{font-size:.95rem;color:var(--ink);margin:0 0 6px}
+.help ol{margin:0;padding-left:1.2em}
+.help li{margin-bottom:4px}
+.toast{position:fixed;left:50%;bottom:calc(210px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:.88rem;z-index:30;max-width:calc(100% - 32px);text-align:center}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="pad">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><span><i style="height:8px"></i><i style="height:16px"></i><i style="height:11px"></i><i style="height:5px"></i></span></div>
+      <div>
+        <h1>Yaz Konuştur</h1>
+        <div class="badge">Cihazda okunur · metin dışarı gitmez</div>
+      </div>
+    </div>
+    <button class="iconbtn" id="openSettings" aria-label="Ses ayarları">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+    </button>
+  </header>
+
+  <main class="pad">
+    <div class="toolbar">
+      <button class="chip on" id="modeEdit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Yaz</button>
+      <button class="chip" id="modeRead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2"/><path d="M20 5v12h-5"/></svg>Oku</button>
+      <button class="chip" id="pasteBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/></svg>Yapıştır</button>
+      <button class="chip" id="clearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>Temizle</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="notice" id="voiceNotice" hidden></div>
+    <div class="sheet">
+      <span class="example" id="exampleTag" hidden>Örnek metin</span>
+      <textarea id="text" placeholder="Seslendirmek istediğin metni buraya yapıştır…" spellcheck="false"></textarea>
+      <div id="reader" hidden></div>
+    </div>
+  </main>
+
+  <section class="dock pad" aria-label="Oynatma">
+    <div class="prog">
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="meta"><span id="posTxt">Hazır</span><span id="remTxt"></span></div>
+    </div>
+    <div class="transport">
+      <button class="tbtn" id="stopBtn" aria-label="Durdur ve başa dön"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+      <button class="tbtn" id="prevBtn" aria-label="Önceki cümle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button class="play" id="playBtn" aria-label="Oynat">
+        <svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span class="eq" id="icoEq"><i></i><i></i><i></i><i></i></span>
+      </button>
+      <button class="tbtn" id="nextBtn" aria-label="Sonraki cümle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <button class="tbtn" id="testBtn" aria-label="Sesi dene"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10v4h4l5 4V6L8 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></button>
+    </div>
+    <div class="speed">
+      <label for="rateRange">Hız</label>
+      <div class="rates" id="rates"></div>
+      <span class="rateval" id="rateVal">1×</span>
+    </div>
+  </section>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel pad" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="grab"></div>
+    <div class="row"><h2 id="setTitle">Ses ayarları</h2><button class="iconbtn" id="closeSettings" aria-label="Kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+
+    <div class="field"><span>Ses motoru</span>
+      <div class="seg" id="engineSeg"><button data-v="system">Telefonun sesi</button><button data-v="ema">EMA yapay zekâ</button></div>
+      <small id="emaInfo" style="color:var(--muted);font-size:.82rem">EMA cihazında çalışan Türkçe yapay zekâ sesidir. İlk seçimde bir kez yaklaşık 50 MB iner, sonra internetsiz çalışır.</small>
+      <div class="bar" id="emaBar" hidden><i id="emaFill"></i></div>
+    </div>
+    <label class="field" id="voiceField"><span>Ses</span><select id="voiceSel"></select></label>
+    <div class="row" id="trRow"><div>Sadece Türkçe sesler<small id="voiceCount"></small></div><label class="switch"><input type="checkbox" id="trOnly" checked><b></b></label></div>
+
+    <label class="field"><span>Hız ince ayar · <b id="rateFine">1.00×</b></span><input type="range" id="rateRange" min="0.5" max="3" step="0.05" value="1"></label>
+    <label class="field" id="pitchField"><span>Ton · <b id="pitchVal">1.00</b></span><input type="range" id="pitch" min="0.5" max="1.5" step="0.05" value="1"></label>
+
+    <div class="field"><span>Parça uzunluğu</span>
+      <div class="seg" id="chunkSeg"><button data-v="short">Kısa</button><button data-v="normal">Normal</button><button data-v="long">Uzun</button></div>
+      <small style="color:var(--muted);font-size:.82rem">Metin cümlelere, uzun cümleler virgüllerden parçalara bölünür. Yüksek hızda kelime yutuluyorsa “Kısa” seç.</small>
+    </div>
+    <label class="field"><span>Cümle arası es · <b id="gapVal">0 ms</b></span><input type="range" id="gap" min="0" max="800" step="50" value="0"></label>
+    <div class="row"><div>Ekranı açık tut<small>Ekran kapanınca Android okumayı kesebilir.</small></div><label class="switch"><input type="checkbox" id="wake" checked><b></b></label></div>
+
+    <div class="help" id="helpBox">
+      <h3>2× hızda kelimeler bozuluyorsa</h3>
+      <p style="margin:0 0 8px">Sesleri telefonun TTS motoru üretir, bu sayfa yalnızca metni ona parça parça verir. Samsung TTS genelde yüksek hızda daha temiz okur. Değiştirmek için:</p>
+      <ol>
+        <li>Ayarlar › Genel yönetim › Dil ve klavye (ya da “Metin okuma”) › <b>Metin okuma çıktısı</b>.</li>
+        <li><b>Tercih edilen motor</b>: Samsung metin okuma motoru.</li>
+        <li>Motorun dişli simgesinden Türkçe ses verisini indir.</li>
+        <li>Brave'i tamamen kapatıp yeniden aç. Sesler bu listede görünür.</li>
+      </ol>
+      <p style="margin:8px 0 0">Ses listesi boşsa Brave Kalkanları (aslan simgesi) bu sayfada parmak izi korumasını kapatman gerekebilir.</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const synth = window.speechSynthesis;
+  const RATES = [1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+  const CHUNK_MAX = {short: 90, normal: 170, long: 280};
+  const SAMPLE = "Merhaba! Bu sayfa yapıştırdığın metni telefonundaki ses motoruyla okur. Metin hiçbir sunucuya gönderilmez, her şey cihazında olur.\n\nUzun metinler cümlelere, çok uzun cümleler de virgüllerden kısa parçalara bölünür. Böylece hızı 1,5 ya da 2 kata çıkardığında motor kelimeleri yutmadan, sırayla okur.\n\nOkurken bir cümleye dokunursan oradan devam eder. Bu örneği silip kendi metnini yapıştırabilirsin.";
+
+  const store = {
+    get(k, d){ try{ const v = localStorage.getItem("yk_" + k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+    set(k, v){ try{ localStorage.setItem("yk_" + k, JSON.stringify(v)); }catch(e){} }
+  };
+
+  const S = Object.assign({voiceURI:"", rate:1, pitch:1, trOnly:true, chunk:"short", gap:0, wake:true, engine:"ema"}, store.get("settings", {}));
+  const saveS = () => store.set("settings", S);
+
+  let chunks = [], cur = store.get("pos", 0), state = "idle"; // idle | playing | paused
+  let token = 0, voices = [], keep = [], wakeLock = null, watchdog = null, textDirty = true;
+
+  const ta = $("text"), reader = $("reader");
+  const savedText = store.get("text", null);
+  ta.value = savedText === null ? SAMPLE : savedText;
+  $("exampleTag").hidden = ta.value !== SAMPLE;
+
+  /* ---------- Metni parçalara bölme ---------- */
+  const ABBR = /(?:\b(?:Dr|Prof|Doç|Av|Yrd|Sn|Bkz|bkz|vb|vs|örn|Örn|yy|St|Mr|Mrs|No|no|s|S|Cad|Sok|Mah|Apt|Tel|Ltd|Şti|A\.Ş|vd)\.)$/;
+  function splitSentences(p){
+    const out = []; let buf = "";
+    const parts = p.split(/([.!?…]+["'”’»)]*\s+)/);
+    for(let i = 0; i < parts.length; i += 2){
+      buf += parts[i] + (parts[i+1] || "");
+      const next = parts[i+2] || "";
+      const endsAbbr = ABBR.test(buf.trim());
+      const endsNum = /\d\.\s*$/.test(buf) && /^\d/.test(next);
+      const lowerNext = /^[a-zçğıöşü]/.test(next) && !/[!?…]/.test(parts[i+1]);
+      if(parts[i+1] && !endsAbbr && !endsNum && !lowerNext){ out.push(buf.trim()); buf = ""; }
+    }
+    if(buf.trim()) out.push(buf.trim());
+    return out;
+  }
+  function splitLong(s, max){
+    if(s.length <= max) return [s];
+    const res = [];
+    let rest = s;
+    while(rest.length > max){
+      const win = rest.slice(0, max);
+      let cut = -1;
+      for(const re of [/[;:]\s/g, /[,–—]\s/g, /\s(?:ve|ama|fakat|ancak|çünkü|veya|ya da|ki)\s/g, /\s/g]){
+        let m, last = -1;
+        re.lastIndex = 0;
+        while((m = re.exec(win))){ if(m.index > max * 0.35) last = m.index + (m[0].trim().length && /^[;:,–—]/.test(m[0]) ? 1 : 0); }
+        if(last > 0){ cut = last; break; }
+      }
+      if(cut <= 0) cut = max;
+      res.push(rest.slice(0, cut).trim());
+      rest = rest.slice(cut).trim();
+    }
+    if(rest) res.push(rest);
+    return res;
+  }
+  function build(){
+    const max = CHUNK_MAX[S.chunk] || 120;
+    const paras = ta.value.replace(/\r/g, "").split(/\n\s*\n|\n(?=\s*[-•*\d])/).map(p => p.replace(/\s+/g, " ").trim()).filter(Boolean);
+    chunks = [];
+    paras.forEach((p, pi) => {
+      splitSentences(p).forEach(s => splitLong(s, max).forEach(c => {
+        // Sadece noktalama olan parçaları atla
+        if(/[\p{L}\p{N}]/u.test(c)) chunks.push({text: c, para: pi});
+      }));
+    });
+    if(cur >= chunks.length) cur = 0;
+    renderReader();
+    textDirty = false;
+    updateProgress();
+  }
+  function renderReader(){
+    reader.textContent = "";
+    let p = null, lastPara = -1;
+    chunks.forEach((c, i) => {
+      if(c.para !== lastPara){ p = document.createElement("p"); reader.appendChild(p); lastPara = c.para; }
+      const sp = document.createElement("span");
+      sp.className = "s"; sp.dataset.i = i; sp.textContent = c.text;
+      p.appendChild(sp); p.appendChild(document.createTextNode(" "));
+    });
+    if(!chunks.length){ const e = document.createElement("p"); e.style.color = "var(--muted)"; e.textContent = "Okunacak metin yok. “Yaz” sekmesine geçip metin yapıştır."; reader.appendChild(e); }
+    paint();
+  }
+  function paint(){
+    reader.querySelectorAll(".s").forEach(el => {
+      const i = +el.dataset.i;
+      el.classList.toggle("past", i < cur);
+      el.classList.toggle("cur", i === cur && state !== "idle");
+    });
+  }
+  function scrollToCur(){
+    const el = reader.querySelector('.s[data-i="' + cur + '"]');
+    if(!el) return;
+    const r = el.getBoundingClientRect(), box = reader.getBoundingClientRect();
+    if(r.top < box.top + 40 || r.bottom > box.bottom - 60){
+      reader.scrollTo({top: reader.scrollTop + r.top - box.top - box.height * 0.3, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+    }
+  }
+
+  /* ---------- Sesler ---------- */
+  function loadVoices(){
+    if(!synth) return;
+    voices = synth.getVoices().slice();
+    fillVoices();
+  }
+  function isTr(v){ return /^tr([-_]|$)/i.test(v.lang) || /turk|türk/i.test(v.name); }
+  function fillVoices(){
+    const sel = $("voiceSel");
+    const list = (S.trOnly ? voices.filter(isTr) : voices).slice().sort((a, b) => (isTr(b) - isTr(a)) || a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name));
+    sel.textContent = "";
+    const def = document.createElement("option");
+    def.value = ""; def.textContent = "Sistem varsayılanı (Türkçe)";
+    sel.appendChild(def);
+    list.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v.voiceURI;
+      o.textContent = v.name + " · " + v.lang + (v.localService ? "" : " · çevrimiçi");
+      sel.appendChild(o);
+    });
+    sel.value = list.some(v => v.voiceURI === S.voiceURI) ? S.voiceURI : "";
+    const trCount = voices.filter(isTr).length;
+    $("voiceCount").textContent = voices.length ? voices.length + " ses bulundu, " + trCount + " tanesi Türkçe" : "Henüz ses listesi gelmedi";
+    const n = $("voiceNotice");
+    if(S.engine === "ema"){ n.hidden = true; }
+    else if(!synth){ n.hidden = false; n.textContent = "Bu tarayıcı konuşma sentezini desteklemiyor. Brave ya da Chrome'un güncel sürümünü dene."; }
+    else if(!voices.length){ n.hidden = false; n.textContent = "Ses listesi alınamadı. Yine de varsayılan Türkçe sesle okumayı deneyebilirsin. Brave kullanıyorsan Kalkanlar menüsünden bu sayfa için parmak izi engellemeyi kapat."; }
+    else n.hidden = true;
+  }
+  function currentVoice(){ return voices.find(v => v.voiceURI === S.voiceURI) || null; }
+
+  /* ---------- Okuma ---------- */
+  function estSec(fromIdx){
+    let ch = 0;
+    for(let i = fromIdx; i < chunks.length; i++) ch += chunks[i].text.length;
+    return ch / (14 * S.rate) + (chunks.length - fromIdx) * (S.gap / 1000 + 0.15);
+  }
+  function fmt(s){ s = Math.max(0, Math.round(s)); const m = Math.floor(s / 60); return m + ":" + String(s % 60).padStart(2, "0"); }
+  function updateProgress(){
+    const n = chunks.length;
+    const done = state === "idle" && cur === 0 ? 0 : cur;
+    $("barFill").style.width = n ? (done / n * 100) + "%" : "0";
+    $("posTxt").textContent = !n ? "Metin yok" : state === "idle" && cur === 0 ? n + " parça hazır" : "Parça " + Math.min(cur + 1, n) + " / " + n;
+    $("remTxt").textContent = n ? "≈ " + fmt(estSec(cur)) + " kaldı" : "";
+    const words = (ta.value.match(/[\p{L}\p{N}]+/gu) || []).length;
+    $("count").textContent = words.toLocaleString("tr-TR") + " kelime";
+  }
+  function setState(s){
+    state = s;
+    const playing = s === "playing";
+    $("icoPlay").style.display = playing ? "none" : "block";
+    $("icoEq").style.display = playing ? "flex" : "none";
+    $("playBtn").setAttribute("aria-label", playing ? "Duraklat" : "Oynat");
+    if(playing) holdWake(); else dropWake();
+    paint(); updateProgress();
+  }
+
+  /* ---------- EMA motoru (cihazda yapay zekâ sesi) ---------- */
+  const EMA = { worker: null, state: "off", cache: new Map(), pending: new Map(), audio: new Audio(), req: 0, gen: 0, idx: -1, err: "" };
+  EMA.audio.preload = "auto";
+  const isEma = () => S.engine === "ema";
+  function emaInit(){
+    if(EMA.worker) return;
+    EMA.state = "loading"; renderEngine();
+    try{ EMA.worker = new Worker("ema-worker.js"); }catch(e){ EMA.state = "error"; EMA.err = String(e.message || e); renderEngine(); return; }
+    EMA.worker.onmessage = e => {
+      const m = e.data;
+      if(m.type === "progress"){ $("emaBar").hidden = false; $("emaFill").style.width = Math.round(m.got / m.total * 100) + "%"; if(state === "playing") $("posTxt").textContent = "Model iniyor · %" + Math.round(m.got / m.total * 100); }
+      else if(m.type === "ready"){ EMA.state = "ready"; renderEngine(); if(state === "playing") play(cur); }
+      else if(m.type === "audio"){ const p = EMA.pending.get(m.id); if(p){ EMA.pending.delete(m.id); p.resolve(m); } }
+      else if(m.type === "error"){
+        if(m.id != null){ const p = EMA.pending.get(m.id); if(p){ EMA.pending.delete(m.id); p.reject(new Error(m.message)); } }
+        else { EMA.state = "error"; EMA.err = m.message; renderEngine(); if(state === "playing"){ setState("paused"); toast("EMA yüklenemedi"); } }
+      }
+    };
+    EMA.worker.onerror = e => { EMA.state = "error"; EMA.err = e.message || "Çalışan başlatılamadı"; renderEngine(); };
+    EMA.worker.postMessage({ type: "init", base: new URL("model/", location.href).href });
+  }
+  function renderEngine(){
+    $("engineSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === S.engine));
+    const ema = isEma();
+    $("voiceField").hidden = ema; $("trRow").hidden = ema; $("pitchField").hidden = ema; $("helpBox").hidden = ema;
+    const info = $("emaInfo");
+    if(!ema) info.textContent = "EMA cihazında çalışan Türkçe yapay zekâ sesidir. İlk seçimde bir kez yaklaşık 50 MB iner, sonra internetsiz çalışır.";
+    else if(EMA.state === "loading") info.textContent = "Model hazırlanıyor. Bu sadece ilk seferde uzun sürer.";
+    else if(EMA.state === "ready"){ info.textContent = "EMA hazır. Ses tamamen bu cihazda üretiliyor."; $("emaBar").hidden = true; }
+    else if(EMA.state === "error") info.textContent = "EMA yüklenemedi: " + EMA.err + ". İnternet bağlantını kontrol edip sayfayı yenile.";
+    if(ema) $("voiceNotice").hidden = true; else fillVoices();
+  }
+  function emaReset(){ // hız ya da metin değişince üretilmiş sesler geçersiz
+    EMA.gen++; EMA.worker && EMA.worker.postMessage({ type: "gen", gen: EMA.gen });
+    EMA.cache.forEach(p => p.then(u => URL.revokeObjectURL(u.url)).catch(() => {}));
+    EMA.cache.clear(); EMA.idx = -1;
+  }
+  function wav(samples, rate, padSec){
+    const pad = Math.round(padSec * rate), n = samples.length + pad;
+    const buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, str) => { for(let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt "); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, n * 2, true);
+    for(let i = 0; i < samples.length; i++){ const x = Math.max(-1, Math.min(1, samples[i])); v.setInt16(44 + i * 2, x < 0 ? x * 32768 : x * 32767, true); }
+    return new Blob([buf], { type: "audio/wav" });
+  }
+  function emaGet(i){
+    if(i < 0 || i >= chunks.length) return null;
+    if(EMA.cache.has(i)) return EMA.cache.get(i);
+    const id = ++EMA.req, text = chunks[i].text;
+    const pr = new Promise((resolve, reject) => EMA.pending.set(id, { resolve, reject })).then(m => {
+      const pause = (/[.!?…]["'”’»)]*$/.test(text) ? 0.25 : 0.12) / S.rate + S.gap / 1000;
+      if(m.stats) EMA.last = m.stats;
+      return { url: URL.createObjectURL(wav(m.audio, 48000, pause)), stats: m.stats };
+    });
+    pr.catch(() => EMA.cache.delete(i));
+    EMA.cache.set(i, pr);
+    EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text, speed: S.rate, seed: 1000 + i });
+    // eski sesleri bırak
+    for(const k of [...EMA.cache.keys()]) if(k < i - 2 || k > i + 4){ EMA.cache.get(k).then(u => URL.revokeObjectURL(u.url)).catch(() => {}); EMA.cache.delete(k); }
+    return pr;
+  }
+  function emaSpeak(i, my){
+    const a = EMA.audio;
+    if(EMA.state !== "ready"){ emaInit(); $("posTxt").textContent = "Model hazırlanıyor…"; return; }
+    if(!EMA.cache.has(i)) $("posTxt").textContent = "Ses hazırlanıyor…";
+    emaGet(i).then(r => {
+      if(my !== token || state !== "playing") return;
+      EMA.idx = i;
+      a.src = r.url; a.playbackRate = 1;
+      a.onended = () => { if(my === token && state === "playing") speakAt(i + 1); };
+      a.play().catch(err => { toast("Ses çalınamadı: " + err.message); setState("paused"); });
+      updateProgress();
+      emaGet(i + 1); emaGet(i + 2);
+    }).catch(err => {
+      if(err.message === "stale" || my !== token) return;
+      toast("Bu parça üretilemedi, atlanıyor"); speakAt(i + 1);
+    });
+  }
+  if("mediaSession" in navigator){
+    try{
+      navigator.mediaSession.metadata = new MediaMetadata({ title: "Yaz Konuştur", artist: "EMA · cihazda" });
+      navigator.mediaSession.setActionHandler("play", () => play());
+      navigator.mediaSession.setActionHandler("pause", () => pause());
+      navigator.mediaSession.setActionHandler("nexttrack", () => jump(1));
+      navigator.mediaSession.setActionHandler("previoustrack", () => jump(-1));
+    }catch(e){}
+  }
+  function speakAt(i){
+    clearTimeout(watchdog);
+    if(i >= chunks.length){ cur = 0; store.set("pos", 0); setState("idle"); reader.scrollTop = 0; toast("Okuma bitti"); return; }
+    if(i < 0) i = 0;
+    cur = i; store.set("pos", cur);
+    const my = ++token;
+    if(isEma()){ paint(); updateProgress(); scrollToCur(); emaSpeak(i, my); return; }
+    const c = chunks[i];
+    const u = new SpeechSynthesisUtterance(c.text);
+    const v = currentVoice();
+    if(v){ u.voice = v; u.lang = v.lang; } else u.lang = "tr-TR";
+    u.rate = S.rate; u.pitch = S.pitch; u.volume = 1;
+    let advanced = false;
+    const next = () => {
+      if(advanced || my !== token || state !== "playing") return;
+      advanced = true; clearTimeout(watchdog);
+      if(S.gap) setTimeout(() => { if(my === token && state === "playing") speakAt(i + 1); }, S.gap);
+      else speakAt(i + 1);
+    };
+    u.onend = next;
+    u.onerror = e => { if(e.error === "interrupted" || e.error === "canceled") return; next(); };
+    keep.push(u); if(keep.length > 6) keep.shift(); // GC olmasın diye referans tut (Chrome hatası)
+    synth.speak(u);
+    // Bazı Android sürümlerinde onend gelmeyebilir: tahmini sürenin çok üstüne çıkarsa ve motor susmuşsa ilerle
+    const limit = (c.text.length / (8 * S.rate) + 4) * 1000;
+    const check = () => { if(my !== token || state !== "playing") return; if(!synth.speaking && !synth.pending) next(); else watchdog = setTimeout(check, 1500); };
+    watchdog = setTimeout(check, limit);
+    paint(); updateProgress(); scrollToCur();
+  }
+  function play(from){
+    if(!isEma() && !synth){ toast("Bu tarayıcıda konuşma sentezi yok"); return; }
+    if(textDirty) build();
+    if(!chunks.length){ toast("Önce bir metin yapıştır"); return; }
+    showRead();
+    const at = from === undefined ? cur : from;
+    if(isEma()){
+      const a = EMA.audio;
+      // Duraklatılan parçaya kaldığı yerden devam et
+      if(state === "paused" && at === EMA.idx && a.src && !a.ended && a.currentTime > 0){ token++; const my = token; setState("playing"); a.onended = () => { if(my === token && state === "playing") speakAt(at + 1); }; a.play().catch(() => {}); return; }
+      a.pause();
+      setState("playing"); speakAt(at); return;
+    }
+    token++; synth.cancel();
+    setState("playing");
+    setTimeout(() => { if(state === "playing") speakAt(at); }, 60); // cancel sonrası kısa bekleme, aksi halde ilk parça düşebiliyor
+  }
+  function pause(){
+    if(isEma()){ token++; EMA.audio.pause(); setState("paused"); return; }
+    // Android'de pause/resume güvenilir değil: iptal edip parçanın başından devam ediyoruz
+    token++; clearTimeout(watchdog); synth && synth.cancel();
+    setState("paused");
+  }
+  function stop(){
+    token++; clearTimeout(watchdog); synth && synth.cancel();
+    EMA.audio.pause(); EMA.idx = -1;
+    cur = 0; store.set("pos", 0); setState("idle"); reader.scrollTop = 0;
+  }
+  function jump(d){
+    if(textDirty) build();
+    const n = Math.max(0, Math.min(chunks.length - 1, cur + d));
+    if(state === "playing") play(n); else { cur = n; store.set("pos", cur); if(state === "idle") state = "paused"; setState(state); scrollToCur(); }
+  }
+  let restartT = null;
+  function restartIfPlaying(){
+    if(state !== "playing") return;
+    clearTimeout(restartT);
+    restartT = setTimeout(() => { if(isEma()){ EMA.idx = -1; EMA.audio.pause(); } play(cur); }, 250);
+  }
+
+  async function holdWake(){
+    if(!S.wake || wakeLock || !("wakeLock" in navigator)) return;
+    try{ wakeLock = await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release", () => { wakeLock = null; }); }catch(e){}
+  }
+  function dropWake(){ try{ wakeLock && wakeLock.release(); }catch(e){} wakeLock = null; }
+  document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && state === "playing") holdWake(); });
+
+  /* ---------- Arayüz ---------- */
+  let toastT;
+  function toast(msg){ const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2200); }
+
+  function showRead(){ if(textDirty) build(); ta.hidden = true; reader.hidden = false; $("modeRead").classList.add("on"); $("modeEdit").classList.remove("on"); $("exampleTag").hidden = true; scrollToCur(); }
+  function showEdit(){ reader.hidden = true; ta.hidden = false; $("modeEdit").classList.add("on"); $("modeRead").classList.remove("on"); $("exampleTag").hidden = ta.value !== SAMPLE; }
+  $("modeRead").onclick = showRead;
+  $("modeEdit").onclick = () => { if(state === "playing") pause(); showEdit(); };
+
+  let saveT;
+  ta.addEventListener("input", () => {
+    textDirty = true; cur = 0; store.set("pos", 0); emaReset();
+    if(state !== "idle") stop();
+    $("exampleTag").hidden = true;
+    clearTimeout(saveT); saveT = setTimeout(() => store.set("text", ta.value), 400);
+    updateProgress();
+  });
+  $("pasteBtn").onclick = async () => {
+    try{
+      const t = await navigator.clipboard.readText();
+      if(t && t.trim()){ ta.value = t; ta.dispatchEvent(new Event("input")); showEdit(); toast("Metin yapıştırıldı"); return; }
+      throw 0;
+    }catch(e){
+      showEdit(); if(ta.value === SAMPLE) ta.value = ""; ta.focus(); ta.select();
+      toast("Metin kutusuna basılı tutup “Yapıştır”ı seç");
+    }
+  };
+  $("clearBtn").onclick = () => { ta.value = ""; ta.dispatchEvent(new Event("input")); showEdit(); ta.focus(); };
+
+  reader.addEventListener("click", e => {
+    const s = e.target.closest(".s"); if(!s) return;
+    play(+s.dataset.i);
+  });
+
+  $("playBtn").onclick = () => state === "playing" ? pause() : play();
+  $("stopBtn").onclick = stop;
+  $("prevBtn").onclick = () => jump(-1);
+  $("nextBtn").onclick = () => jump(1);
+  $("testBtn").onclick = () => {
+    if(isEma()){
+      if(EMA.state !== "ready"){ emaInit(); toast("Model hazırlanıyor"); return; }
+      if(state === "playing") pause();
+      const id = ++EMA.req;
+      new Promise((resolve, reject) => EMA.pending.set(id, { resolve, reject })).then(m => {
+        EMA.idx = -1; EMA.audio.src = URL.createObjectURL(wav(m.audio, 48000, 0)); EMA.audio.onended = null; EMA.audio.play().catch(() => {});
+        toast("Üretim hızı: gerçek zamanın " + (1 / m.stats.rtf).toFixed(1) + " katı");
+      }).catch(() => {});
+      EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text: "Merhaba, bu ses " + String(S.rate).replace(".", ",") + " kat hızda, tamamen telefonunda üretiliyor.", speed: S.rate, seed: 7 });
+      return;
+    }
+    if(!synth) return;
+    if(state === "playing") pause();
+    token++; synth.cancel();
+    setTimeout(() => {
+      const u = new SpeechSynthesisUtterance("Merhaba, bu ses " + String(S.rate).replace(".", ",") + " kat hızda okuyor. Şimdi metnini dinleyebilirsin.");
+      const v = currentVoice(); if(v){ u.voice = v; u.lang = v.lang; } else u.lang = "tr-TR";
+      u.rate = S.rate; u.pitch = S.pitch; keep.push(u); synth.speak(u);
+    }, 60);
+  };
+
+  // Hız
+  const ratesEl = $("rates");
+  RATES.forEach(r => {
+    const b = document.createElement("button");
+    b.className = "rate"; b.dataset.r = r; b.textContent = String(r).replace(".", ",") + "×";
+    b.onclick = () => setRate(r);
+    ratesEl.appendChild(b);
+  });
+  function setRate(r, quiet){
+    S.rate = Math.round(r * 100) / 100; saveS();
+    const label = String(S.rate).replace(".", ",") + "×";
+    $("rateVal").textContent = label;
+    $("rateFine").textContent = S.rate.toFixed(2) + "×";
+    $("rateRange").value = S.rate;
+    ratesEl.querySelectorAll(".rate").forEach(b => b.classList.toggle("on", +b.dataset.r === S.rate));
+    updateProgress();
+    if(!quiet){ emaReset(); restartIfPlaying(); }
+  }
+  $("rateRange").addEventListener("input", e => setRate(+e.target.value));
+
+  // Ayarlar
+  $("openSettings").onclick = () => { $("overlay").hidden = false; loadVoices(); };
+  $("closeSettings").onclick = () => $("overlay").hidden = true;
+  $("overlay").addEventListener("click", e => { if(e.target === $("overlay")) $("overlay").hidden = true; });
+  document.addEventListener("keydown", e => {
+    if(e.key === "Escape") $("overlay").hidden = true;
+    if(e.key === " " && document.activeElement !== ta && !/SELECT|INPUT|BUTTON/.test(document.activeElement.tagName)){ e.preventDefault(); $("playBtn").click(); }
+  });
+  $("voiceSel").onchange = e => { S.voiceURI = e.target.value; saveS(); restartIfPlaying(); };
+  $("trOnly").checked = S.trOnly;
+  $("trOnly").onchange = e => { S.trOnly = e.target.checked; saveS(); fillVoices(); };
+  $("pitch").value = S.pitch; $("pitchVal").textContent = (+S.pitch).toFixed(2);
+  $("pitch").addEventListener("input", e => { S.pitch = +e.target.value; $("pitchVal").textContent = S.pitch.toFixed(2); saveS(); restartIfPlaying(); });
+  $("gap").value = S.gap; $("gapVal").textContent = S.gap + " ms";
+  $("gap").addEventListener("input", e => { S.gap = +e.target.value; $("gapVal").textContent = S.gap + " ms"; saveS(); emaReset(); updateProgress(); });
+  $("wake").checked = S.wake;
+  $("wake").onchange = e => { S.wake = e.target.checked; saveS(); if(!S.wake) dropWake(); else if(state === "playing") holdWake(); };
+  function paintSeg(){ $("chunkSeg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === S.chunk)); }
+  $("chunkSeg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    S.chunk = b.dataset.v; saveS(); paintSeg();
+    const wasPlaying = state === "playing";
+    // Mevcut konumu korumak için okunmuş karakter oranını kullan
+    const ratio = chunks.length ? cur / chunks.length : 0;
+    emaReset(); build(); cur = Math.floor(ratio * chunks.length);
+    if(wasPlaying) play(cur); else { paint(); updateProgress(); }
+  });
+
+  $("engineSeg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    const was = state === "playing";
+    if(was) pause();
+    S.engine = b.dataset.v; saveS(); EMA.idx = -1;
+    if(isEma()) emaInit();
+    renderEngine();
+  });
+
+  /* ---------- Başlangıç ---------- */
+  paintSeg();
+  setRate(S.rate, true);
+  if(synth){
+    loadVoices();
+    if("onvoiceschanged" in synth) synth.addEventListener("voiceschanged", loadVoices);
+    // Android'de liste bazen geç gelir
+    let tries = 0; const iv = setInterval(() => { tries++; if(voices.length || tries > 20) clearInterval(iv); else loadVoices(); }, 300);
+  } else fillVoices();
+  build();
+  renderEngine();
+  if(isEma()) emaInit();
+  if(cur > 0) state = "paused";
+  setState(state);
+  window.addEventListener("pagehide", () => { synth && synth.cancel(); });
+})();
+</script>
+<script>
+if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){
+  navigator.serviceWorker.register("sw.js").then(function(){
+    // Önbellek katmanı devreye girince çok çekirdekli mod için sayfayı bir kez yenile
+    if(!self.crossOriginIsolated){
+      var k="yk_coi_reload";
+      var go=function(){ try{ if(sessionStorage.getItem(k)) return; sessionStorage.setItem(k,"1"); }catch(e){ return; } location.reload(); };
+      if(navigator.serviceWorker.controller) go(); else navigator.serviceWorker.addEventListener("controllerchange", go);
+    }
+  }).catch(function(){});
+}
+</script>
+</body>
+</html>
