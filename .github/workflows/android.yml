@@ -20,13 +20,12 @@ jobs:
           path: site
           sparse-checkout: |
             yaz-konustur/ema/model
-            yaz-konustur/ema/ort
 
       - name: Model dosyalarını uygulamaya kopyala
         run: |
+          # Uygulamada ses yerel ONNX Runtime ile üretilir, tarayıcı sürümündeki wasm (ort/) gerekmez
           rm -rf app/src/main/assets/www/model app/src/main/assets/www/ort
           cp -r site/yaz-konustur/ema/model app/src/main/assets/www/model
-          cp -r site/yaz-konustur/ema/ort app/src/main/assets/www/ort
           du -sh app/src/main/assets/www
 
       - uses: actions/setup-java@v5

@@ -20,6 +20,7 @@ android {
         }
         debug {
             applicationIdSuffix ".debug"
+            ndk { abiFilters "arm64-v8a", "armeabi-v7a", "x86_64" }
             versionNameSuffix "-deneme"
         }
     }
@@ -31,6 +32,7 @@ android {
     androidResources {
         // Model ve wasm zaten sıkıştırılmış gibi davranmaz; sıkıştırma indirme boyutunu küçültür, o yüzden açık bırakıyoruz
         ignoreAssetsPattern "!.git:!.DS_Store"
+        // Modeller okunurken bellekte tamamen açılıyor; sıkıştırılmış kalmaları indirme boyutunu küçültür
     }
     lint {
         abortOnError false
@@ -48,4 +50,5 @@ dependencies {
     implementation "androidx.webkit:webkit:1.14.0"
     implementation "androidx.media:media:1.7.0"
     implementation "com.android.billingclient:billing:8.0.0"
+    implementation "com.microsoft.onnxruntime:onnxruntime-android:1.30.0"
 }

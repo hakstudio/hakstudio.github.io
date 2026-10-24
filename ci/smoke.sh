@@ -9,7 +9,7 @@ adb shell am start -n $P/com.hakstudio.yazkonustur.MainActivity
 sleep 45
 adb exec-out screencap -p > smoke/1-acilis.png
 # Paylaş ile metin gönder ve okumayı başlat
-adb shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "'Bu metin paylaş menüsünden geldi. Yapay zekâ sesi cihazda okuyor.'" -n $P/com.hakstudio.yazkonustur.MainActivity
+adb shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "'Bu metin paylaş menüsünden geldi. Yapay zekâ sesi cihazda okuyor. Fotosentez, bitkilerin güneş ışığını kullanarak su ve karbondioksitten besin ürettiği süreçtir. Bu süreç yaprakların içindeki kloroplastlarda gerçekleşir. Işığa bağlı tepkimelerde su molekülleri parçalanır ve oksijen açığa çıkar.'" -n $P/com.hakstudio.yazkonustur.MainActivity
 sleep 25
 adb exec-out screencap -p > smoke/2-paylasim.png
 adb shell dumpsys notification --noredact | grep -A3 "yazkonustur" | head -40 > smoke/bildirim.txt

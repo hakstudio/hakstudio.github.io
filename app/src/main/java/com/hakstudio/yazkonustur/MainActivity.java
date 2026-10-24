@@ -96,6 +96,10 @@ public class MainActivity extends Activity {
         WebViewAssetLoader loader = new WebViewAssetLoader.Builder()
                 .setDomain(HOST)
                 .addPathHandler("/shared/", path -> openShared(path))
+                .addPathHandler("/ema/", path -> {
+                    byte[] b = bridge.takeEma(path);
+                    return b == null ? null : new WebResourceResponse("application/octet-stream", null, new java.io.ByteArrayInputStream(b));
+                })
                 .addPathHandler("/", path -> openAsset(path))
                 .build();
 

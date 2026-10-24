@@ -23,7 +23,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -33,6 +37,10 @@ import java.util.regex.Pattern;
 public class Bridge {
     final MainActivity a;
     final ExecutorService io = Executors.newSingleThreadExecutor();
+    final ExecutorService ema = Executors.newSingleThreadExecutor();
+    EmaEngine engine;
+    volatile int emaGen;
+    final Map<String, byte[]> emaOut = new ConcurrentHashMap<>();
     TextToSpeech tts;
     boolean ttsReady;
     OutputStream exportOut;
@@ -61,6 +69,52 @@ public class Bridge {
     @JavascriptInterface
     public void ready() {
         a.runOnUiThread(a::onPageReady);
+    }
+
+    /* ---------- EMA sesi, yerel ONNX Runtime ile (çok çekirdekli) ---------- */
+    @JavascriptInterface
+    public void emaInit() {
+        ema.execute(() -> {
+            try {
+                if (engine == null) {
+                    EmaEngine e = new EmaEngine();
+                    e.load(a);
+                    engine = e;
+                }
+                a.js("YKApp.emaEvent(" + new JSONObject().put("type", "ready").put("threads", engine.threads).put("vocab", engine.vocab) + ")");
+            } catch (Throwable t) {
+                a.js("YKApp.emaEvent({type:'error',message:" + JSONObject.quote(String.valueOf(t.getMessage())) + "})");
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void emaGen(int gen) {
+        emaGen = gen;
+    }
+
+    @JavascriptInterface
+    public void emaSynth(int id, int gen, String text, double seed) {
+        ema.execute(() -> {
+            if (gen < emaGen) {
+                a.js("YKApp.emaEvent({type:'error',id:" + id + ",message:'stale'})");
+                return;
+            }
+            try {
+                EmaEngine.Result r = engine.synth(text, (long) seed);
+                ByteBuffer b = ByteBuffer.allocate(r.audio.length * 4).order(ByteOrder.LITTLE_ENDIAN);
+                b.asFloatBuffer().put(r.audio);
+                emaOut.put(String.valueOf(id), b.array());
+                a.js("YKApp.emaEvent(" + new JSONObject().put("type", "audio").put("id", id).put("url", "/ema/" + id).put("sec", r.sec).put("ms", r.ms) + ")");
+            } catch (Throwable t) {
+                a.js("YKApp.emaEvent({type:'error',id:" + id + ",message:" + JSONObject.quote(String.valueOf(t.getMessage())) + "})");
+            }
+        });
+    }
+
+    /** Üretilen ses sayfaya /ema/<id> adresinden bir kez verilir. */
+    byte[] takeEma(String id) {
+        return emaOut.remove(id);
     }
 
     /* ---------- Satın alma ---------- */
@@ -315,5 +369,6 @@ public class Bridge {
         if (tts != null) tts.shutdown();
         exportEnd(false);
         io.shutdownNow();
+        ema.shutdownNow();
     }
 }
