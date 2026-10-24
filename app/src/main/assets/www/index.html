@@ -737,6 +737,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   $("clearBtn").onclick = () => { ta.value = ""; S.title = ""; S.docId = null; saveS(); ta.dispatchEvent(new Event("input")); showEdit(); ta.focus(); };
 
   reader.addEventListener("click", e => { const s = e.target.closest(".s"); if(!s) return; play(+s.dataset.i); });
+  $("playBtn").onclick = () => state === "playing" ? pause() : play();
+  $("stopBtn").onclick = stop;
+  $("prevBtn").onclick = () => jump(-1);
+  $("nextBtn").onclick = () => jump(1);
 
   // PDF
   let pdfjs = null;
@@ -752,9 +756,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       for(const it of tc.items){
         if(!("str" in it)) continue;
         const y = it.transform ? it.transform[5] : null;
-        if(lastY !== null && y !== null && Math.abs(y - lastY) > (it.height || 10) * 1.9 && !s.endsWith("\n")) s += "\n";
+        // Satırlar arası boşluk normalden büyükse yeni paragraf
+        if(lastY !== null && y !== null && it.str.trim()){ const gap = Math.abs(y - lastY); if(gap > (it.height || 10) * 1.6) s = s.replace(/\n?$/, "\n\n"); else if(gap > 1 && !s.endsWith("\n")) s += "\n"; }
         s += it.str + (it.hasEOL ? "\n" : "");
-        if(y !== null) lastY = y;
+        if(y !== null && it.str.trim()) lastY = y;
       }
       pages.push(s);
       onPage && onPage(p, doc.numPages);
@@ -770,7 +775,6 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       if(!l){ if(!out.endsWith("\n\n")) out += "\n\n"; continue; }
       if(!out || out.endsWith("\n\n")){ out += l; continue; }
       if(/[a-zçğıöşü]-$/i.test(out)) out = out.slice(0, -1) + l;           // satır sonu tirelemesi
-      else if(/[.!?:…]["'”’»)]*$/.test(out) && l.length < 60 && /^[A-ZÇĞİÖŞÜ0-9•\-]/.test(l) && false) out += "\n\n" + l;
       else out += " " + l;
     }
     return out.replace(/\n{3,}/g, "\n\n").trim();
@@ -805,7 +809,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
         if(n.closest("li") && n.tagName !== "LI") return;
         const t = n.textContent.replace(/\s+/g, " ").trim(); if(t) parts.push(t);
       });
-      const text = (art.title ? art.title + "\n\n" : "") + (parts.length ? parts.join("\n\n") : art.textContent.trim());
+      const head = art.title && !(parts[0] || "").toLowerCase().includes(art.title.toLowerCase().slice(0, 20)) && parts[0] !== art.title ? art.title + "\n\n" : "";
+      const text = head + (parts.length ? parts.join("\n\n") : art.textContent.trim());
       busy = false; closeSheets();
       loadText(text, art.title || new URL(r.url || url).hostname, {read: true});
       toast("Sayfa açıldı");
@@ -903,7 +908,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     if(textDirty) build();
     if(!chunks.length){ toast("Önce bir metin yapıştır"); return; }
     if(!isEma()){ toast("MP3 kaydı EMA sesiyle yapılır, ayarlardan EMA'yı seç"); return; }
-    const all = split(ta.value), mins = Math.max(1, Math.round(estSec.call(null, 0) * S.rate / 60));
+    const all = split(ta.value), mins = Math.max(1, Math.round(estSec(0) * S.rate / 60));
     openSheet("MP3 olarak kaydet", body => {
       body.appendChild(el("p", "hint", all.length + " parça, yaklaşık " + mins + " dakikalık ses. Seçtiğin ses tonuyla, normal hızda kaydedilir; dinlerken oynatıcıdan hızlandırabilirsin. Telefonda üretildiği için uzun metinlerde birkaç dakika sürebilir."));
       const go = el("button", "btn accent", "Kaydetmeye başla");
@@ -930,7 +935,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     const enc = new lamejs.Mp3Encoder(1, SR, 64);
     const webParts = [];
     const tone = S.tone;
-    const write = u8 => { if(!u8.length) return; if(N) N.exportWrite(b64(u8)); else webParts.push(u8.slice()); };
+    const write = i8 => { if(!i8.length) return; const u8 = new Uint8Array(i8.buffer, i8.byteOffset, i8.length); if(N) N.exportWrite(b64(u8)); else webParts.push(u8.slice()); };
     const t0 = Date.now();
     let failed = null;
     try{
@@ -963,7 +968,6 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     // r: perde p ile çarpıldı, süre 1/p uzadı. Şimdi süreyi p oranında kısalt (WSOLA benzeri basit OLA).
     const W = 1920, H = W / 2, outLen = x.length, out = new Float32Array(outLen + W), norm = new Float32Array(outLen + W);
     const win = new Float32Array(W); for(let i = 0; i < W; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / W);
-    let prev = 0;
     for(let o = 0; o < outLen; o += H){
       let src = Math.round(o / p);
       // küçük bir aralıkta önceki parçayla en iyi örtüşen yeri ara
@@ -973,7 +977,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
         let v = 0; for(let k = 0; k < H; k += 8) v += r[s + k] * (out[o + k] || 0);
         if(v > bestV){ bestV = v; best = s; }
       }
-      src = o === 0 ? 0 : best; prev = src;
+      src = o === 0 ? 0 : best;
       for(let k = 0; k < W; k++){ const v = r[src + k]; if(v === undefined) break; out[o + k] += v * win[k]; norm[o + k] += win[k]; }
     }
     const y = new Float32Array(outLen);
