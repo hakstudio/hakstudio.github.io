@@ -46,6 +46,8 @@ public class Bridge {
     OutputStream exportOut;
     Uri exportUri;
     int exportCb;
+    String exportName;
+    long exportBytes;
 
     Bridge(MainActivity a) {
         this.a = a;
@@ -254,8 +256,30 @@ public class Bridge {
     /* ---------- MP3 kaydetme: önce konum seçilir, sonra sayfa parça parça yazar ---------- */
     @JavascriptInterface
     public void exportStart(String name, int cb) {
+        exportCb = cb;
+        exportName = name;
+        exportBytes = 0;
+        if (Build.VERSION.SDK_INT >= 29) {
+            // Android 10 ve üzeri: izin istemeden doğrudan Müzik/Yaz Konuştur klasörüne yaz
+            String res = "no";
+            try {
+                android.content.ContentValues v = new android.content.ContentValues();
+                v.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name);
+                v.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg");
+                v.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "Music/Yaz Konuştur");
+                v.put(android.provider.MediaStore.MediaColumns.IS_PENDING, 1);
+                Uri u = a.getContentResolver().insert(android.provider.MediaStore.Audio.Media.getContentUri(android.provider.MediaStore.VOLUME_EXTERNAL_PRIMARY), v);
+                if (u != null) {
+                    exportOut = a.getContentResolver().openOutputStream(u, "w");
+                    exportUri = u;
+                    res = exportOut != null ? "ok" : "no";
+                }
+            } catch (Exception ignored) {
+            }
+            a.js("YKApp.cb(" + cb + ",'" + res + "')");
+            return;
+        }
         a.runOnUiThread(() -> {
-            exportCb = cb;
             Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             i.addCategory(Intent.CATEGORY_OPENABLE);
             i.setType("audio/mpeg");
@@ -272,6 +296,10 @@ public class Bridge {
         String res = "no";
         if (u != null) {
             try {
+                try {
+                    a.getContentResolver().takePersistableUriPermission(u, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } catch (Exception ignored) {
+                }
                 exportOut = a.getContentResolver().openOutputStream(u, "w");
                 exportUri = u;
                 res = exportOut != null ? "ok" : "no";
@@ -284,25 +312,129 @@ public class Bridge {
     @JavascriptInterface
     public void exportWrite(String b64) {
         try {
-            if (exportOut != null) exportOut.write(Base64.decode(b64, Base64.DEFAULT));
+            if (exportOut != null) {
+                byte[] d = Base64.decode(b64, Base64.DEFAULT);
+                exportOut.write(d);
+                exportBytes += d.length;
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    /** Kaydı bitirir. Başarılıysa kaydın adresini döner, kayıtlar listesine ekler. */
+    @JavascriptInterface
+    public String exportEnd(boolean ok, String title, double sec) {
+        try {
+            if (exportOut != null) exportOut.close();
+        } catch (Exception ignored) {
+            ok = false;
+        }
+        exportOut = null;
+        Uri u = exportUri;
+        exportUri = null;
+        if (u == null) return "";
+        if (!ok) {
+            deleteUri(u);
+            return "";
+        }
+        if (Build.VERSION.SDK_INT >= 29 && "media".equals(u.getAuthority())) {
+            try {
+                android.content.ContentValues v = new android.content.ContentValues();
+                v.put(android.provider.MediaStore.MediaColumns.IS_PENDING, 0);
+                a.getContentResolver().update(u, v, null, null);
+            } catch (Exception ignored) {
+            }
+        }
+        try {
+            JSONArray list = recsRaw();
+            JSONArray out = new JSONArray().put(new JSONObject()
+                    .put("uri", u.toString()).put("name", exportName).put("title", title)
+                    .put("sec", sec).put("size", exportBytes).put("date", System.currentTimeMillis()));
+            for (int i = 0; i < list.length(); i++) out.put(list.get(i));
+            a.getSharedPreferences("yk", Context.MODE_PRIVATE).edit().putString("recs", out.toString()).apply();
+        } catch (Exception ignored) {
+        }
+        return u.toString();
+    }
+
+    /* ---------- Kaydedilen sesler ---------- */
+    JSONArray recsRaw() {
+        try {
+            return new JSONArray(a.getSharedPreferences("yk", Context.MODE_PRIVATE).getString("recs", "[]"));
+        } catch (Exception e) {
+            return new JSONArray();
+        }
+    }
+
+    boolean exists(Uri u) {
+        try (android.os.ParcelFileDescriptor fd = a.getContentResolver().openFileDescriptor(u, "r")) {
+            return fd != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** Hâlâ duran kayıtlar; telefondan silinmiş olanlar listeden de düşer. */
+    @JavascriptInterface
+    public String recList() {
+        JSONArray list = recsRaw(), keep = new JSONArray();
+        try {
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject o = list.getJSONObject(i);
+                if (exists(Uri.parse(o.getString("uri")))) keep.put(o);
+            }
+            if (keep.length() != list.length())
+                a.getSharedPreferences("yk", Context.MODE_PRIVATE).edit().putString("recs", keep.toString()).apply();
+        } catch (Exception ignored) {
+        }
+        return keep.toString();
+    }
+
+    @JavascriptInterface
+    public void recOpen(String uri) {
+        a.runOnUiThread(() -> {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setDataAndType(Uri.parse(uri), "audio/mpeg");
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            try {
+                a.startActivity(Intent.createChooser(i, "Şununla dinle"));
+            } catch (Exception e) {
+                Toast.makeText(a, "Sesi açacak bir uygulama bulunamadı", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void recShare(String uri, String title) {
+        a.runOnUiThread(() -> {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("audio/mpeg");
+            i.putExtra(Intent.EXTRA_STREAM, Uri.parse(uri));
+            i.putExtra(Intent.EXTRA_TITLE, title);
+            i.setClipData(ClipData.newRawUri(title, Uri.parse(uri)));
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            try {
+                a.startActivity(Intent.createChooser(i, "Sesi paylaş"));
+            } catch (Exception ignored) {
+            }
+        });
+    }
+
+    void deleteUri(Uri u) {
+        try {
+            if ("media".equals(u.getAuthority())) a.getContentResolver().delete(u, null, null);
+            else android.provider.DocumentsContract.deleteDocument(a.getContentResolver(), u);
         } catch (Exception ignored) {
         }
     }
 
     @JavascriptInterface
-    public void exportEnd(boolean ok) {
-        try {
-            if (exportOut != null) exportOut.close();
-        } catch (Exception ignored) {
-        }
-        exportOut = null;
-        if (!ok && exportUri != null) {
-            try {
-                android.provider.DocumentsContract.deleteDocument(a.getContentResolver(), exportUri);
-            } catch (Exception ignored) {
-            }
-        }
-        exportUri = null;
+    public boolean recDelete(String uri) {
+        Uri u = Uri.parse(uri);
+        deleteUri(u);
+        boolean gone = !exists(u);
+        if (gone) recList();
+        return gone;
     }
 
     /* ---------- Telefonun kendi TTS motoru ---------- */
@@ -367,7 +499,7 @@ public class Bridge {
 
     void shutdown() {
         if (tts != null) tts.shutdown();
-        exportEnd(false);
+        exportEnd(false, "", 0);
         io.shutdownNow();
         ema.shutdownNow();
     }

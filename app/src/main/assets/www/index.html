@@ -116,7 +116,7 @@ textarea#text::placeholder{color:var(--muted)}
 .blk{padding:6px 16px 10px}
 .blk > b{display:block;font-weight:400;margin-bottom:6px}
 .blk small{display:block;color:var(--muted);font-size:.85rem}
-select,input[type=url]{width:100%;height:52px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+select,input[type=url],.lexForm input{width:100%;height:52px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
 input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
 .switch{position:relative;width:52px;height:32px;flex:none}
 .switch input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer;z-index:1}
@@ -142,6 +142,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
 .perks small{display:block;color:var(--muted);font-size:.86rem}
 .price{font-size:1.6rem;font-weight:500}
 .lic{font-family:ui-monospace,monospace;font-size:.72rem;white-space:pre-wrap;background:var(--surface2);border-radius:8px;padding:10px;max-height:240px;overflow:auto;user-select:text}
+.libTabs{margin-bottom:8px}
+.libTabs button{flex:1}
+.btnRow{display:flex;gap:8px}
+.btnRow .btn{flex:1}
+.lexForm{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center}
+.lexForm input{min-width:0}
 .licItem{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--line)}
 .licItem small{display:block;color:var(--muted);font-size:.84rem}
 .licBtns{display:flex;gap:4px;margin-left:-12px}
@@ -253,6 +259,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     </div>
     <div class="blk" id="helpBox" hidden><small>Telefonun sesi, telefonda ayarlı metin okuma motorunu (Google, Samsung vb.) kullanır. Yüksek hızda kelime yutuyorsa yapay zekâ sesine geç ya da parça uzunluğunu “Kısa” yap.</small></div>
 
+    <div class="sec">Okunuş</div>
+    <label class="li"><span class="tx"><b>İngilizce kelimeleri İngilizce oku</b><small>“How are you” gibi kelimeler “hav ar yu” diye okunur. Türkçede de olan kelimeler yalnızca İngilizce bir cümlenin içindeyse değişir.</small></span><span class="switch"><input type="checkbox" id="enRead"><b></b></span></label>
+    <button class="li" id="lexLink"><span class="tx"><b>Okunuş sözlüğü</b><small id="lexSub">Bir kelimenin nasıl okunacağını sen belirle</small></span></button>
+    <button class="li" id="resetVoice"><span class="tx"><b>Ses ayarlarını varsayılana döndür</b><small>Hız, ses tonu, cümle arası es ve parça uzunluğu. Metinlerin silinmez.</small></span></button>
+
     <div class="sec">Hakkında</div>
     <button class="li" id="introLink"><span class="tx"><b>Tanıtımı yeniden göster</b></span></button>
     <button class="li" id="licLink"><span class="tx"><b>Açık kaynak lisansları</b><small>Ses modeli ve kullanılan kitaplıklar</small></span></button>
@@ -281,6 +292,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
 <div class="toast" id="toast" hidden role="status"></div>
 
 
+<script src="normalize.js"></script>
 <script>
 (function(){
   const $ = id => document.getElementById(id);
@@ -296,7 +308,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     set(k, v){ try{ localStorage.setItem("yk_" + k, JSON.stringify(v)); }catch(e){} }
   };
 
-  const S = Object.assign({voiceURI:"", rate:1, pitch:1, tone:1, chunk:"short", gap:0, wake:false, engine:"ema", fsize:1, theme:"auto", docId:null, title:""}, store.get("settings", {}));
+  const S = Object.assign({voiceURI:"", rate:1, pitch:1, tone:1, chunk:"short", gap:0, enRead:true, wake:false, engine:"ema", fsize:1, theme:"auto", docId:null, title:""}, store.get("settings", {}));
   const saveS = () => store.set("settings", S);
 
   let chunks = [], cur = store.get("pos", 0), state = "idle"; // idle | playing | paused
@@ -436,10 +448,10 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     };
     if(N){
       sysNext = next;
-      N.ttsSpeak(c.text, S.rate, S.tone, S.voiceURI || "", my);
+      N.ttsSpeak(say(c.text), S.rate, S.tone, S.voiceURI || "", my);
       return;
     }
-    const u = new SpeechSynthesisUtterance(c.text);
+    const u = new SpeechSynthesisUtterance(say(c.text));
     const v = voices.find(v => v.id === S.voiceURI);
     if(v){ u.voice = v.raw; u.lang = v.lang; } else u.lang = "tr-TR";
     u.rate = S.rate; u.pitch = S.tone; u.volume = 1;
@@ -568,7 +580,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
   function emaRaw(text, seed){
     const id = ++EMA.req;
     const pr = new Promise((resolve, reject) => EMA.pending.set(id, { resolve, reject }));
-    EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text, speed: 1, seed });
+    EMA.worker.postMessage({ type: "synth", id, gen: EMA.gen, text: say(text), speed: 1, seed });
     return pr;
   }
   function emaGet(i){
@@ -728,6 +740,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     mp3: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3z"/></svg>',
     restart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 1 0-3-3c0 .24.04.47.09.7L8.04 9.81A2.99 2.99 0 0 0 3 12a3 3 0 0 0 5.04 2.19l7.12 4.16c-.05.21-.08.43-.08.65A2.92 2.92 0 1 0 18 16.08"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
     gear: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.48.48 0 0 0 .12.61l2.03 1.58a7.07 7.07 0 0 0 0 1.88l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2"/></svg>',
     del: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>',
@@ -968,9 +981,19 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     if(!S.docId) return;
     try{ await tx("readwrite", st => st.put({ id: S.docId, title: S.title || docTitleOf(ta.value), text: ta.value, pos: cur, total: chunks.length, updated: Date.now() })); }catch(e){}
   }
-  $("openLib").onclick = async () => {
-    const docs = app.pro ? await libAll().catch(() => []) : [];
+  let libTab = "docs";
+  const iconBtn = (icon, label, fn) => { const x = el("span", "ib", ICON[icon]); x.setAttribute("role", "button"); x.setAttribute("aria-label", label); x.style.color = "var(--muted)"; x.onclick = ev => { ev.stopPropagation(); fn(); }; return x; };
+  const fmtDate = t => new Date(t).toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
+  async function openLib(tab){
+    if(tab) libTab = tab;
+    const docs = app.pro && libTab === "docs" ? await libAll().catch(() => []) : [];
+    let recs = [];
+    if(libTab === "recs" && N) try{ recs = JSON.parse(N.recList()); }catch(e){}
     openSheet("Kitaplık", body => {
+      const seg = el("div", "seg libTabs", '<button data-v="docs">Metinler</button><button data-v="recs">Kayıtlar</button>');
+      seg.querySelectorAll("button").forEach(x => { x.classList.toggle("on", x.dataset.v === libTab); x.onclick = () => { if(x.dataset.v !== libTab) openLib(x.dataset.v); }; });
+      body.appendChild(seg);
+      if(libTab === "recs") return fillRecs(body, recs);
       if(!app.pro){
         body.appendChild(el("p", "hint", "Kitaplık, kaydettiğin metinleri ve her birinde kaldığın yeri saklar. Ders notlarını, kitap bölümlerini ayrı ayrı tutup istediğin an kaldığın yerden dinlersin."));
         const b = el("button", "btn", "Pro ile kitaplığı aç"); b.onclick = () => showPro("lib"); body.appendChild(b); return;
@@ -980,12 +1003,10 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
       if(!docs.length) body.appendChild(el("p", "hint", "Henüz kayıtlı metin yok. PDF, web sayfası ya da paylaştığın metinler buraya otomatik eklenir."));
       docs.forEach(d => {
         const pct = d.total ? Math.round(d.pos / d.total * 100) : 0;
-        const b = itemBtn("doc", d.title, pct + "% dinlendi · " + new Date(d.updated).toLocaleDateString("tr-TR"));
+        const b = itemBtn("doc", d.title, pct + "% dinlendi · " + fmtDate(d.updated));
         if(d.id === S.docId) b.classList.add("cur");
         const bar = el("div", "mini", '<i style="width:' + pct + '%"></i>'); b.querySelector(".tx").appendChild(bar);
-        const del = el("span", "ib", ICON.del); del.setAttribute("role", "button"); del.setAttribute("aria-label", "Sil"); del.style.color = "var(--muted)";
-        del.onclick = async ev => { ev.stopPropagation(); if(!confirm("“" + d.title + "” silinsin mi?")) return; await tx("readwrite", st => st.delete(d.id)); if(S.docId === d.id){ S.docId = null; saveS(); } b.remove(); };
-        b.appendChild(del);
+        b.appendChild(iconBtn("del", "Sil", async () => { if(!confirm("“" + d.title + "” silinsin mi?")) return; await tx("readwrite", st => st.delete(d.id)); if(S.docId === d.id){ S.docId = null; saveS(); } b.remove(); }));
         b.onclick = () => {
           if(state !== "idle") stop();
           ta.value = d.text; S.title = d.title; S.docId = d.id; saveS(); store.set("text", d.text);
@@ -996,7 +1017,32 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
       });
       body.appendChild(list);
     });
-  };
+  }
+  function recRow(r){
+    const b = itemBtn("mp3", r.title || r.name.replace(/\.mp3$/i, ""), fmt(r.sec || 0) + " · " + fmtDate(r.date));
+    b.onclick = () => N.recOpen(r.uri);
+    b.appendChild(iconBtn("share", "Paylaş", () => N.recShare(r.uri, r.name)));
+    return b;
+  }
+  function fillRecs(body, recs){
+    if(!N){ body.appendChild(el("p", "hint", "Kayıtlar uygulamada görünür.")); return; }
+    if(!recs.length){
+      body.appendChild(el("p", "hint", "Henüz kayıt yok. Bir metni ⋮ › MP3 olarak kaydet ile ses dosyasına çevirdiğinde burada görünür."));
+      return;
+    }
+    const list = el("div", "list");
+    recs.forEach(r => {
+      const b = recRow(r);
+      b.appendChild(iconBtn("del", "Sil", () => {
+        if(!confirm("“" + (r.title || r.name) + "” telefondan silinsin mi?")) return;
+        if(N.recDelete(r.uri)) b.remove(); else toast("Silinemedi. Dosyayı Dosyalar uygulamasından silebilirsin.", 3500);
+      }));
+      list.appendChild(b);
+    });
+    body.appendChild(list);
+    body.appendChild(el("p", "hint", "Kayıtlar telefonun Müzik › Yaz Konuştur klasöründe durur. Dokununca müzik uygulamanda açılır."));
+  }
+  $("openLib").onclick = () => openLib();
 
   /* ---------- MP3 olarak kaydetme ---------- */
   const exportMp3 = () => need("mp3", () => {
@@ -1032,7 +1078,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     const tone = S.tone;
     const write = i8 => { if(!i8.length) return; const u8 = new Uint8Array(i8.buffer, i8.byteOffset, i8.length); if(N) N.exportWrite(b64(u8)); else webParts.push(u8.slice()); };
     const t0 = Date.now();
-    let failed = null;
+    let failed = null, total = 0;
     try{
       for(let i = 0; i < all.length; i++){
         if(XP.cancel) break;
@@ -1041,6 +1087,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
         if(tone !== 1) pcm = toneShift(pcm, tone);
         const pause = /[.!?…]["'”’»)]*$/.test(all[i].text) ? 0.3 : 0.15;
         const n = pcm.length + Math.round(pause * SR), s16 = new Int16Array(n);
+        total += n / SR;
         for(let k = 0; k < pcm.length; k++){ const x = Math.max(-1, Math.min(1, pcm[k])); s16[k] = x < 0 ? x * 32768 : x * 32767; }
         for(let k = 0; k < n; k += 11520) write(enc.encodeBuffer(s16.subarray(k, Math.min(n, k + 11520))));
         const done = i + 1, el2 = (Date.now() - t0) / 1000;
@@ -1050,10 +1097,18 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
       write(enc.flush());
     }catch(e){ failed = e; }
     const cancelled = XP.cancel || !!failed;
-    if(N){ try{ N.exportEnd(!cancelled); }catch(e){} }
+    let uri = "";
+    if(N){ try{ uri = N.exportEnd(!cancelled, S.title || docTitleOf(ta.value), total) || ""; }catch(e){} }
     else if(!cancelled){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(webParts, {type: "audio/mpeg"})); a.download = name + ".mp3"; a.click(); }
     busy = false; XP.on = false; closeSheets();
-    toast(failed ? "Kaydedilemedi: " + (failed.message || failed) : cancelled ? "Kayıt iptal edildi" : "MP3 kaydedildi", 3500);
+    if(uri && !cancelled) openSheet("MP3 kaydedildi", b => {
+      b.appendChild(el("p", "hint", fmt(total) + " uzunluğunda. Kitaplık › Kayıtlar bölümünde ve telefonun Müzik › Yaz Konuştur klasöründe bulursun."));
+      const row = el("div", "btnRow");
+      const play = el("button", "btn", "Dinle"); play.onclick = () => N.recOpen(uri);
+      const sh = el("button", "btn tonal", "Paylaş"); sh.onclick = () => N.recShare(uri, name + ".mp3");
+      row.append(play, sh); b.appendChild(row);
+    });
+    else toast(failed ? "Kaydedilemedi: " + (failed.message || failed) : cancelled ? "Kayıt iptal edildi" : "MP3 kaydedildi", 3500);
     if(!cancelled && !app.pro) setTimeout(() => useTrial("mp3"), 3600);
   }
   // Ton değişimi (dışa aktarma için): perdeyi ve süreyi birlikte değiştiren basit yeniden örnekleme,
@@ -1216,6 +1271,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     { name: "Readability.js", by: "Mozilla", lic: "Apache-2.0", url: "https://github.com/mozilla/readability", files: ["vendor/readability-LICENSE.txt"] },
     { name: "lamejs (MP3 kodlayıcı)", by: "lamejs geliştiricileri", lic: "LGPL-3.0", url: "https://github.com/breezystack/lamejs", files: ["vendor/lame-LICENSE.txt", "licenses/LGPL-3.0.txt", "licenses/GPL-3.0.txt"] },
     { name: "Atkinson Hyperlegible yazı tipi", by: "Braille Institute", lic: "OFL-1.1", url: "https://github.com/googlefonts/atkinson-hyperlegible", files: ["licenses/atkinson-OFL.txt"] },
+    { name: "İngilizce okunuş verisi (en-okunus.json)", by: "CMU Pronouncing Dictionary · FrequencyWords (Hermit Dave, OpenSubtitles)", lic: "BSD-2 · CC BY-SA 4.0", url: "https://github.com/cmusphinx/cmudict", files: ["licenses/cmudict-LICENSE.txt"],
+      note: "Okunuşlar CMU sözlüğünden Türkçe harflere çevrildi, kelimeler FrequencyWords sıklık listeleriyle seçildi. Bu veri dosyası da CC BY-SA 4.0 lisanslıdır (https://creativecommons.org/licenses/by-sa/4.0/)." },
     { name: "AndroidX ve Google Play Faturalandırma", by: "Google", lic: "Apache-2.0", url: "https://developer.android.com/jetpack/androidx", files: [] }
   ];
   const openLink = u => { if(N) try{ N.openUrl(u); return; }catch(e){} window.open(u, "_blank"); };
@@ -1292,6 +1349,54 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     $("intro").addEventListener("touchend", e => { if(x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if(Math.abs(dx) > 60) introGo(dx < 0 ? 1 : -1); }); }
   $("verTxt").textContent = "Sürüm " + app.version;
 
+  /* ---------- Okunuş ---------- */
+  function say(t){ try{ return EmaText.respell(t); }catch(e){ return t; } }
+  let lexUser = store.get("lexUser", []);
+  const lexChanged = () => { EmaText.setUser(lexUser); store.set("lexUser", lexUser); $("lexSub").textContent = lexUser.length ? lexUser.length + " kural" : "Bir kelimenin nasıl okunacağını sen belirle"; emaReset(); };
+  let enLex = null;
+  async function applyEn(){
+    if(S.enRead && !enLex) try{ enLex = await (await fetch("en-okunus.json")).json(); }catch(e){}
+    EmaText.cfg.en = S.enRead ? enLex : null;
+    emaReset();
+  }
+  $("enRead").checked = S.enRead;
+  $("enRead").onchange = e => { S.enRead = e.target.checked; saveS(); applyEn(); };
+  function openLex(){ openSheet("Okunuş sözlüğü", b => {
+    b.appendChild(el("p", "hint", "Yanlış okunan isim, marka ya da kısaltmaları buraya ekle. Örneğin “Spotify” yazılışına “spotifay” okunuşu."));
+    const form = el("div", "lexForm");
+    const f = el("input"); f.placeholder = "Yazılış"; f.autocapitalize = "off";
+    const t2 = el("input"); t2.placeholder = "Okunuş";
+    const add = el("button", "btn", "Ekle");
+    add.onclick = () => {
+      const from = f.value.trim(), to = t2.value.trim(); if(!from || !to) return;
+      lexUser = lexUser.filter(r => r.from.toLocaleLowerCase("tr") !== from.toLocaleLowerCase("tr"));
+      lexUser.unshift({ from, to }); lexChanged(); openLex();
+    };
+    t2.addEventListener("keydown", e => { if(e.key === "Enter") add.click(); });
+    form.append(f, t2, add); b.appendChild(form);
+    const list = el("div", "list");
+    lexUser.forEach((r, i) => {
+      const row = itemBtn("edit", r.from, "okunuşu: " + r.to);
+      row.onclick = () => { f.value = r.from; t2.value = r.to; t2.focus(); };
+      row.appendChild(iconBtn("del", "Sil", () => { lexUser.splice(i, 1); lexChanged(); openLex(); }));
+      list.appendChild(row);
+    });
+    b.appendChild(list);
+    if(!lexUser.length) b.appendChild(el("p", "hint", "Henüz kural yok."));
+  }); }
+  $("lexLink").onclick = openLex;
+  $("resetVoice").onclick = () => {
+    if(!confirm("Hız, ses tonu, cümle arası es ve parça uzunluğu varsayılana dönsün mü?")) return;
+    Object.assign(S, { rate: 1, pitch: 1, tone: 1, gap: 0, chunk: "short" }); saveS();
+    $("gap").value = 0; $("gapVal").textContent = "0 ms";
+    setTone(1, true); setRate(1, true); paintSeg();
+    const wasPlaying = state === "playing", ratio = chunks.length ? cur / chunks.length : 0;
+    emaReset(); build(); cur = Math.floor(ratio * chunks.length);
+    if(wasPlaying) play(cur); else { paint(); updateProgress(); }
+    toast("Ses ayarları varsayılana döndü");
+  };
+  EmaText.setUser(lexUser); lexChanged(); applyEn();
+
   /* ---------- Başlangıç ---------- */
   paintSeg();
   setRate(S.rate, true);
@@ -1311,7 +1416,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
   if(N) try{ N.ready(); }catch(e){}
 })();
 </script>
-<script src="normalize.js"></script>
 <script src="vendor/lame.js" defer></script>
 <script src="vendor/Readability.js" defer></script>
 </body>

@@ -156,5 +156,55 @@
     return piece.replace(/[,;:\- ]+$/, "") + ".";
   }
 
-  root.EmaText = { spoken, alphabet, finish, intWords, numberWords, ordinal };
+
+  // Okunuş: önce kullanıcının sözlüğü, sonra (açıksa) İngilizce kelimeler Türkçe harflerle yazılır.
+  // cfg.en = { e: kesin İngilizce, a: iki dilde de olabilen kelimeler }; a'dakiler yalnızca yanında
+  // İngilizce bir kelime varken ve Türkçe bir kelimeye komşu değilken İngilizce okunur.
+  const cfg = { user: [], en: null };
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  function setUser(list) {
+    cfg.user = (list || []).filter(r => r && r.from && r.from.trim() && r.to != null).map(r => ({
+      re: new RegExp("(?<![\\p{L}\\p{N}])" + esc(r.from.trim()) + "(?![\\p{L}\\p{N}])", "giu"), to: r.to.trim() }));
+  }
+  function respell(text) {
+    let t = text;
+    for (const r of cfg.user) t = t.replace(r.re, r.to);
+    const L = cfg.en;
+    if (!L) return t;
+    const toks = [];
+    const re = /[\p{L}]+(?:['’][\p{L}]+)?|[.!?;:\n]+/gu;
+    let m;
+    while ((m = re.exec(t))) {
+      const w = m[0];
+      if (/^[.!?;:\n]/.test(w)) { toks.push({ brk: true }); continue; }
+      const prev = t[m.index - 1] || " ", prev2 = t[m.index - 2] || " ";
+      if (/['’\p{N}]/u.test(prev) || (prev === '"' && /\p{L}/u.test(prev2))) { toks.push({ i: m.index, w, suf: "", tag: "N" }); continue; } // 1974'te, "mouse"u gibi ekler
+      const ap = w.search(/['’]/), base = ap < 0 ? w : w.slice(0, ap), suf = ap < 0 ? "" : w.slice(ap + 1);
+      let tag = "T", say = null;
+      if (/^[A-Z]{2,5}$/.test(base)) tag = "N"; // kısaltmalar harf harf okunmaya devam etsin
+      else if (/^[A-Za-z]+$/.test(base)) {
+        const k = base.toLowerCase();
+        if (L.e[k]) { tag = "E"; say = L.e[k]; } else if (L.a[k]) { tag = "A"; say = L.a[k]; } else if (base.length < 3) tag = "N";
+      }
+      toks.push({ i: m.index, w, suf, tag, say });
+    }
+    const side = (j, d) => { const x = toks[j + d]; return !x || x.brk ? null : x.tag; };
+    for (let changed = true; changed;) {
+      changed = false;
+      toks.forEach((x, j) => {
+        if (x.tag !== "A") return;
+        const p = side(j, -1), n = side(j, 1);
+        if ((p === "E" || n === "E") && p !== "T" && n !== "T") { x.tag = "E"; changed = true; }
+      });
+    }
+    let out = "", last = 0;
+    for (const x of toks) {
+      if (x.brk || x.tag !== "E") continue;
+      out += t.slice(last, x.i) + x.say + x.suf;
+      last = x.i + x.w.length;
+    }
+    return out + t.slice(last);
+  }
+
+  root.EmaText = { respell, setUser, cfg, spoken, alphabet, finish, intWords, numberWords, ordinal };
 })(typeof self !== "undefined" ? self : globalThis);
