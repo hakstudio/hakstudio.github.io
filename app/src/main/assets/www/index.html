@@ -1121,6 +1121,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0}
     back(){ if(!$("intro").hidden){ endIntro(); return true; } if(closeSheets()) return true; if(!reader.hidden && state !== "playing"){ showEdit(); return true; } return false; },
     receive(d){
       // Paylaş / metin seçimi / dosya ile açma
+      if(!$("intro").hidden) endIntro(); // bir şey paylaşarak gelen kullanıcıyı tanıtımla bekletme
       if(d.type === "text"){
         const t = (d.text || "").trim(); if(!t) return;
         if(isUrl(t)){ need("web", () => importUrl(t)); return; }
